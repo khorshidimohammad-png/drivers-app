@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>گزارش کارکرد رانندگان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:Vazirmatn,Tahoma,sans-serif;background:#f4f6f9;margin:0;padding:12px;direction:rtl;color:#1f2937}
+  .wrap{max-width:1560px;margin:0 auto}
+  h1{font-size:16px;margin:0 0 3px}
+  .sub{color:#6b7280;font-size:11px;margin-bottom:10px}
+  .toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  button{font-family:inherit}
+  .toolbar button{background:#2563eb;color:#fff;border:none;padding:6px 10px;border-radius:7px;cursor:pointer;font-size:11px}
+  .toolbar button.ghost{background:#fff;color:#374151;border:1px solid #d1d5db}
+  .toolbar button.warn{background:#fff;color:#dc2626;border:1px solid #fecaca}
+  .toolbar button.active{background:#16a34a;color:#fff;border-color:#16a34a}
+  #status{font-size:11px;color:#6b7280;margin-inline-start:auto}
+  .cloud-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
+  .cloud-on{background:#dcfce7;color:#166534}
+  .cloud-off{background:#fee2e2;color:#991b1b}
+  .cloud-sync{background:#fef3c7;color:#92400e}
+
+  .date-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:linear-gradient(90deg,#dbeafe,#e0e7ff);border:2px solid #93c5fd;border-radius:10px;padding:10px 14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(37,99,235,.08)}
+  .date-label{font-size:14px;font-weight:700;color:#1e40af}
+  .date-input{font-family:inherit;font-size:18px;font-weight:700;color:#1e3a8a;background:#fff;border:2px solid #60a5fa;border-radius:8px;padding:6px 12px;text-align:center;direction:ltr;min-width:150px;font-variant-numeric:tabular-nums}
+  .date-input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.2)}
+  .date-jalali{font-size:14px;color:#4f46e5;font-weight:600;background:#fff;padding:6px 12px;border-radius:8px;border:1px dashed #a5b4fc}
+  .date-bar button{background:#1e40af;color:#fff;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:11px}
+
+  .formula{background:#f1f5f9;border-radius:8px;padding:7px 10px;font-size:11px;color:#334155;margin-bottom:10px;line-height:1.8}
+  .formula code{background:#fff;padding:1px 4px;border-radius:4px;color:#1d4ed8;font-family:Consolas,monospace;direction:ltr;display:inline-block}
+
+  .table-scroll{max-height:75vh;overflow:auto;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);background:#fff;border:1px solid #cbd5e1;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;background:#fff;min-width:1400px}
+  table.hide-total .col-total,
+  table.hide-total .total-cell{display:none}
+  thead th{position:sticky;top:0;z-index:2;background:#e2e8f0;font-size:10.5px;color:#334155;font-weight:700;padding:4px 2px;text-align:center;border:1px solid #cbd5e1;white-space:nowrap}
+  tbody td{padding:1px 2px;text-align:center;border:1px solid #e2e8f0;font-size:12px;line-height:1.2}
+  tbody tr.row-num td:first-child{color:#94a3b8;font-size:10px}
+  .th-date{font-size:12px;color:#0f172a;font-weight:700}
+  .th-sub{font-size:9px;color:#64748b;margin-top:1px;font-weight:400}
+
+  td.num{font-variant-numeric:tabular-nums}
+  .name-cell{text-align:right;font-weight:600;color:#334155}
+  .total-cell{font-weight:800;color:#0f172a;background:#f1f5f9 !important;font-size:13px}
+  .diff-cell{font-weight:700;color:#7c3aed;font-variant-numeric:tabular-nums}
+  .diff-cell.neg{color:#dc2626}
+  .diff-cell.zero{color:#94a3b8}
+  .start-cell{background:#e0f7fa !important;font-weight:700;color:#0e7490;font-variant-numeric:tabular-nums}
+  .start-cell input{background:transparent;color:#0e7490}
+  .start-cell input:focus{background:#fff;color:#0f172a}
+  .day-diff-cell{font-weight:600;color:#0891b2;font-size:11px}
+  .night-diff-cell{font-weight:600;color:#0369a1;font-size:11px}
+
+  .cnt-cell{width:50px;padding:1px 2px !important;cursor:pointer;text-align:center;vertical-align:middle;transition:background-color .15s;user-select:none;position:relative}
+  .cnt-cell .prim{font-weight:700;font-size:11.5px;line-height:1.05;color:#334155;font-variant-numeric:tabular-nums}
+  .cnt-cell .base{font-size:9px;line-height:1.05;color:#94a3b8;font-variant-numeric:tabular-nums;margin-top:1px}
+  .cnt-cell .unit{font-size:8px;color:#94a3b8;line-height:1;margin-top:1px}
+  .cnt-cell.ready{background:#fde047 !important;animation:cntPulse 1s infinite;box-shadow:inset 0 0 0 2px #ca8a04}
+  .cnt-cell.ready .prim{color:#78350f}
+  .cnt-cell.wait{background:#93c5fd !important;box-shadow:inset 0 0 0 2px #2563eb}
+  .cnt-cell.wait .prim{color:#1e3a8a}
+  .cnt-cell.wait .base{color:#1d4ed8}
+  .cnt-cell.disabled{background:#e5e7eb !important;cursor:not-allowed;opacity:.55}
+  .cnt-cell.disabled .prim{color:#94a3b8;text-decoration:line-through}
+  .cnt-cell.disabled::after{content:'✕';position:absolute;top:1px;left:2px;font-size:9px;color:#dc2626;font-weight:700}
+  @keyframes cntPulse{0%,100%{opacity:1}50%{opacity:.65}}
+
+  td.hl{background:linear-gradient(180deg,#fef3c7,#fde68a) !important;box-shadow:inset 0 0 0 2px #f59e0b, inset 0 0 10px rgba(245,158,11,.25)}
+  tr.hl-5 td.hl{background:linear-gradient(180deg,#fecaca,#fca5a5) !important;box-shadow:inset 0 0 0 2px #dc2626, inset 0 0 12px rgba(220,38,38,.4);animation:hlPulse 1.4s infinite}
+  @keyframes hlPulse{0%,100%{opacity:1}50%{opacity:.72}}
+
+  .today-input,.yest-input,.name-input,.total-input,.night-input,.start-input{width:100%;border:none;background:transparent;font-family:inherit;padding:2px 3px;color:#0f172a;border-radius:4px;font-size:12px}
+  .today-input{text-align:center;font-size:13px;font-weight:700}
+  .yest-input,.start-input{text-align:center;font-size:12px;font-weight:700;color:#0e7490}
+  .night-input{text-align:center;font-size:12px;font-weight:600;color:#0369a1;background:#f0f9ff}
+  .total-input{text-align:center;font-size:12px;font-weight:700;color:#1d4ed8;background:#eff6ff}
+  .name-input{text-align:right;font-size:12px;font-weight:600}
+  .today-input:focus{outline:none;background:#eff6ff;box-shadow:0 0 0 2px #2563eb inset}
+  .night-input:focus{outline:none;background:#e0f2fe;box-shadow:0 0 0 2px #0284c7 inset}
+  .start-input:focus{outline:none;background:#fff;box-shadow:0 0 0 2px #0e7490 inset}
+  .yest-input:focus,.name-input:focus{outline:none;background:#f0fdf4;box-shadow:0 0 0 2px #16a34a inset}
+  .total-input:focus{outline:none;background:#dbeafe;box-shadow:0 0 0 2px #2563eb inset}
+  .today-input::placeholder,.yest-input::placeholder,.night-input::placeholder,.start-input::placeholder{color:#cbd5e1;font-weight:400}
+
+  .tick-cell{width:32px;padding:1px !important;text-align:center}
+  .tick-box{appearance:none;-webkit-appearance:none;width:15px;height:15px;border:2px solid #cbd5e1;border-radius:4px;background:#fff;cursor:pointer;position:relative;vertical-align:middle}
+  .tick-box:checked{background:#7c3aed;border-color:#7c3aed}
+  .tick-box:checked::after{content:'';position:absolute;top:1px;left:3.5px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+
+  tr.lvl-100 td{background:#e8f8ee}
+  tr.lvl-200 td{background:#fff7d6}
+  tr.lvl-500 td{background:#ffe8c9}
+  tr.lvl-1000 td{background:#ffd9d9}
+  tr.lvl-5000 td{background:#ffe0cc}
+  tr.lvl-10000 td{background:#ffc6c6;animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.72}}
+
+  tr[class*="lvl-"] td:first-child{border-inline-start:3px solid transparent}
+  tr.lvl-100 td:first-child{border-inline-start-color:#22c55e}
+  tr.lvl-200 td:first-child{border-inline-start-color:#eab308}
+  tr.lvl-500 td:first-child{border-inline-start-color:#f97316}
+  tr.lvl-1000 td:first-child{border-inline-start-color:#dc2626}
+  tr.lvl-5000 td:first-child{border-inline-start-color:#ea580c}
+  tr.lvl-10000 td:first-child{border-inline-start-color:#b91c1c}
+  tr.big-scale td{box-shadow:inset 0 0 0 100px rgba(124,58,237,.04)}
+  tr.big-scale .tick-cell{border-inline-end:2px solid #7c3aed !important}
+
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:#64748b}
+  .legend span{display:flex;align-items:center;gap:4px}
+  .sw{width:11px;height:11px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.1)}
+  .sw100{background:#e8f8ee}.sw200{background:#fff7d6}.sw500{background:#ffe8c9}.sw1000{background:#ffd9d9}
+  .sw5000{background:#ffe0cc}.sw10000{background:#ffc6c6}
+  .sw-ready{background:#fde047}.sw-wait{background:#93c5fd}.sw-dis{background:#e5e7eb}
+  .sw-start{background:#e0f7fa}
+  .legend .sep{width:1px;background:#cbd5e1;margin:0 3px}
+  .hint{margin-top:10px;font-size:10.5px;color:#94a3b8;line-height:1.8}
+  .hint b{color:#475569}
+  @media(max-width:720px){
+    body{padding:6px}
+    h1{font-size:14px}
+    .date-bar{padding:8px 10px}
+    .date-input{font-size:14px;min-width:110px;padding:4px 8px}
+    .date-jalali{font-size:11px;padding:4px 8px}
+    .toolbar button{padding:5px 8px;font-size:10px}
+    thead th,tbody td{padding:1px 2px;font-size:10px}
+    .today-input{font-size:11px}.night-input,.yest-input,.total-input,.name-input,.start-input{font-size:10px}
+    .th-sub{display:none}.tick-box{width:13px;height:13px}
+    .table-scroll{max-height:78vh}
+    table{min-width:1250px}
+    .cnt-cell{width:44px}
+    .cnt-cell .prim{font-size:10px}
+    .cnt-cell .base,.cnt-cell .unit{font-size:8px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>گزارش کارکرد رانندگان <span id="cloudBadge" class="cloud-badge cloud-off">آفلاین</span></h1>
+  <div class="sub">۵۰ سطر · تاریخ قابل‌ویرایش · شروع (فقط در ویرایش) · مجموع = شروع + کارکرد</div>
+
+  <div class="date-bar">
+    <span class="date-label">📅 تاریخ امروز:</span>
+    <input type="text" id="dateInput" class="date-input" placeholder="9/30/26" dir="ltr">
+    <span class="date-jalali" id="dateJalali">—</span>
+    <button id="setTodayBtn">بازگشت به امروز</button>
+  </div>
+
+  <div class="formula">
+    <b>شروع:</b> کُنتور کل دستگاه در ابتدای امروز (فقط با «ویرایش اولیه» قابل تغییر) — هر روز به آخرین قرائت به‌روز می‌شود.<br>
+    <code>کارکرد روز = امروز − شروع</code> · <code>کارکرد شب = شب − امروز</code> (تفریق مستقیم، همیشه مثبت)<br>
+    <code>مجموع = شروع + کارکرد روز + کارکرد شب</code> = آخرین قرائت کُنتور<br>
+    <b> خورشیدی </b> (نه از مجموع، تا با اعداد بزرگ بی‌معنا پرش نکنند).<br>
+    <b>مقیاس ساعت (تیک خاموش):</b> <code>100 · 200 · 500 · 1000 · 2000</code> · <b>کیلومتر (تیک روشن):</b> <code>5000 · 10000 · 20000 · 50000 · 100000</code>
+  </div>
+
+  <div class="toolbar">
+    <button id="editBtn" class="ghost">✎ ویرایش اولیه</button>
+    <button id="shiftBtn" class="ghost">شیفت روز</button>
+    <button id="toggleTotalBtn" class="ghost active">👁 مجموع</button>
+    <button id="resetCntBtn" class="ghost">↺ بازنشانی کنتورها</button>
+    <button id="resetBtn" class="warn">بازنشانی کل</button>
+    <button id="exportBtn" class="ghost">⇩ خروجی</button>
+    <button id="importBtn" class="ghost">⇧ بازیابی</button>
+    <input type="file" id="fileInput" accept="application/json" hidden>
+    <span id="status"></span>
+  </div>
+
+  <div class="table-scroll">
+    <table id="mainTable">
+      <thead>
+        <tr>
+          <th style="width:26px">✓</th>
+          <th style="width:30px">#</th>
+          <th style="width:11%">نام</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th style="width:6%">ک.روز</th>
+          <th style="width:6%">ک.شب</th>
+          <th style="width:6%">جمع</th>
+          <th style="width:9%;background:#cffafe">شروع</th>
+          <th style="width:11%" id="thToday"></th>
+          <th style="width:8%">شب</th>
+          <th class="col-total" style="width:8%">مجموع</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="legend">
+    <span><b>سطر:</b></span>
+    <span><i class="sw sw100"></i> ۱۰۰</span>
+    <span><i class="sw sw200"></i> ۲۰۰</span>
+    <span><i class="sw sw500"></i> ۵۰۰</span>
+    <span><i class="sw sw1000"></i> ۱۰۰۰</span>
+    <span class="sep"></span>
+    <span><b>کنتور:</b></span>
+    <span><i class="sw sw-ready"></i> آماده چاپ</span>
+    <span><i class="sw sw-wait"></i> چاپ شد</span>
+    <span><i class="sw sw-dis"></i> غیرفعال</span>
+    <span class="sep"></span>
+    <span><i class="sw sw-start"></i> شروع</span>
+  </div>
+
+  <div class="hint">
+    ✔ <b>شروع</b> فقط در حالت «ویرایش اولیه» قابل تغییر است.<br>
+    ✔ <b>مجموع</b> = شروع + کارکرد روز + کارکرد شب = آخرین قرائت کُنتور.<br>
+    ✔ <b>کنتورها</b> از کارکرد تجمعی روزهای گذشته حساب می‌شوند (شروع را نادیده می‌گیرند).<br>
+    ✔ Enter = سطر بعد · دابل‌کلیک روی سطر = پاک کردن هشدار · کلیک اول روی کنتور زرد = چاپ شد · کلیک دوم = ثبت.
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ═══════════ این خط را با URL پروژه خودت پر کن ═══════════ */
+  var SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_nE1QDolEJKcgKzAxT1L44Q_7o811Nry';
+  /* ═══════════════════════════════════════════════════════════ */
+
+  var TABLE_NAME = 'drivers';
+  var ROW_ID = 1;
+  var CLIENT_ID = 'c' + Math.random().toString(36).slice(2, 10);
+
+  var DATA_KEY = 'driver-hours-50-v16';
+  var NAME_KEY = 'driver-names-50-v16';
+  var ROW_COUNT = 50;
+
+  var SMALL_THRESHOLDS = [100, 200, 500, 1000, 2000];
+  var BIG_THRESHOLDS   = [5000, 10000, 20000, 50000, 100000];
+  var ALL_THRESHOLDS   = SMALL_THRESHOLDS.concat(BIG_THRESHOLDS);
+  var DISABLE_RULES = {
+    200:   { mod: 1000,   from: 500 },
+    20000: { mod: 100000, from: 50000 }
+  };
+
+  var tbody = document.getElementById('tbody');
+  var thToday = document.getElementById('thToday');
+  var statusEl = document.getElementById('status');
+  var cloudBadge = document.getElementById('cloudBadge');
+  var dateInput = document.getElementById('dateInput');
+  var dateJalali = document.getElementById('dateJalali');
+  var mainTable = document.getElementById('mainTable');
+  var els = new Map();
+  var cntHeads = document.querySelectorAll('.cnt-head');
+
+  var names = [];
+  var rows = [];
+  var lastSystemDate = null;
+  var currentDate = '';
+  var editMode = false;
+
+  var FA='۰۱۲۳۴۵۶۷۸۹', AR='٠١٢٣٤٥٦٧٨٩';
+  function toEnDigits(s){return String(s).replace(/[۰-۹]/g,function(d){return FA.indexOf(d);}).replace(/[٠-٩]/g,function(d){return AR.indexOf(d);});}
+  function num(v){if(v==null)return 0;var s=toEnDigits(v).replace(/[^\d.\-]/g,'');var n=parseFloat(s);return isNaN(n)?0:n;}
+  function fmtNum(n){return Math.round(n*100)/100;}
+  function uid(){return 'r'+Math.random().toString(36).slice(2,9);}
+  function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function fmtMdy(d){return (d.getMonth()+1)+'/'+d.getDate()+'/'+String(d.getFullYear()).slice(-2);}
+  function fmtJalali(d){try{return new Intl.DateTimeFormat('fa-IR').format(d);}catch(e){return '';}}
+  function ckey(N){return 'c'+N;}
+
+  var statusTimer=null;
+  function setStatus(m){statusEl.textContent=m;clearTimeout(statusTimer);statusTimer=setTimeout(function(){statusEl.textContent='';},4500);}
+  function setCloudBadge(state){
+    cloudBadge.className='cloud-badge cloud-'+state;
+    cloudBadge.textContent = state==='on'?'همگام':state==='sync'?'در حال همگام‌سازی...':'آفلاین';
+  }
+
+  var supabase = null;
+  if (typeof window.supabase !== 'undefined' && SUPABASE_URL.indexOf('YOUR_PROJECT') === -1) {
+    try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
+    catch(e) { console.warn('Supabase init failed:', e); }
+  }
+
+  /* ═══════════ محاسبات ═══════════ */
+  function calcWorks(r){
+    var s = num(r.start);
+    var t = String(r.today).trim() !== '' ? num(r.today) : null;
+    var n = String(r.nightShift).trim() !== '' ? num(r.nightShift) : null;
+    if (t === null && n === null) return { day: 0, night: 0 };
+    if (t !== null && n === null) return { day: Math.max(0, t - s), night: 0 };
+    if (t === null && n !== null) return { day: 0, night: Math.max(0, n - s) };
+    return { day: Math.max(0, t - s), night: Math.max(0, n - t) };
+  }
+  function calcDayWork(r){ return calcWorks(r).day; }
+  function calcNightWork(r){ return calcWorks(r).night; }
+  function calcTotalWork(r){ var w = calcWorks(r); return w.day + w.night; }
+
+  /* مجموع نمایشی = شروع + کارکرد امروز = آخرین قرائت کُنتور */
+  function displayTotal(r){ return num(r.start) + calcTotalWork(r); }
+
+  /* کارکرد تجمعی از نصب (برای کنتورها) */
+  function cumTotal(r){ return num(r.cumWork) + calcTotalWork(r); }
+
+  function thresholdsOf(bigScale){ return bigScale ? BIG_THRESHOLDS : SMALL_THRESHOLDS; }
+
+  function cntState(r, N){
+    var key = ckey(N);
+    if (!r[key]) r[key] = { base: 0, printed: false };
+    return r[key];
+  }
+  function cntPrimary(r, N){ return Math.max(0, cumTotal(r) - cntState(r, N).base); }
+  function cntSecondary(r, N){ return cntState(r, N).base; }
+  function isCounterDisabled(total, N){
+    var rule = DISABLE_RULES[N];
+    if (!rule) return false;
+    var m = ((total % rule.mod) + rule.mod) % rule.mod;
+    return m >= rule.from;
+  }
+  function cntStatus(r, N){
+    var ct = cumTotal(r);
+    if (isCounterDisabled(ct, N)) return 'disabled';
+    var st = cntState(r, N);
+    var prim = cntPrimary(r, N);
+    if (st.printed && prim >= N) return 'wait';
+    if (prim >= N) return 'ready';
+    return '';
+  }
+  function highlightCount(total, bigScale){
+    var steps = thresholdsOf(bigScale);
+    var n = 0;
+    for (var i = 0; i < steps.length; i++) {
+      if (total >= steps[i]) n = i + 1; else break;
+    }
+    return n;
+  }
+
+  function defaultNames(){var a=['مهندس خسروی'];for(var i=2;i<=ROW_COUNT;i++)a.push('راننده '+i);return a;}
+  function emptyCounters(){
+    var o = {};
+    ALL_THRESHOLDS.forEach(function(N){ o[ckey(N)] = { base: 0, printed: false }; });
+    return o;
+  }
+  function makeRow(cumWork, start, bigScale){
+    var r = {id:uid(), cumWork: num(cumWork), start: num(start), today:'', nightShift:'',
+             bigScale: !!bigScale, alertOk:false};
+    Object.assign(r, emptyCounters());
+    return r;
+  }
+  function defaultRows(){
+    var a = [makeRow(0, 4129, false)];
+    for(var i=2;i<=ROW_COUNT;i++) a.push(makeRow(0, 0, false));
+    return a;
+  }
+
+  function loadNames(){try{var v=JSON.parse(localStorage.getItem(NAME_KEY)||'null');if(Array.isArray(v)&&v.length===ROW_COUNT)return v.slice();}catch(e){}return defaultNames();}
+  function saveNames(){try{localStorage.setItem(NAME_KEY,JSON.stringify(names));}catch(e){}}
+
+  function buildPayload(){
+    return {
+      version: 16, client_id: CLIENT_ID,
+      names: names,
+      lastSystemDate: lastSystemDate,
+      currentDate: currentDate,
+      rows: rows.map(function(r){
+        var o = {cumWork:r.cumWork, start:r.start, today:r.today,
+                 nightShift:r.nightShift, bigScale:!!r.bigScale, alertOk:!!r.alertOk};
+        ALL_THRESHOLDS.forEach(function(N){
+          var st = r[ckey(N)] || {base:0, printed:false};
+          o[ckey(N)] = { base: num(st.base), printed: !!st.printed };
+        });
+        return o;
+      })
+    };
+  }
+  function saveLocal(){try{localStorage.setItem(DATA_KEY,JSON.stringify(buildPayload()));}catch(e){}}
+
+  function applyPayload(d, silent){
+    if (!d || !Array.isArray(d.rows) || d.rows.length !== ROW_COUNT) return false;
+    names = (Array.isArray(d.names) && d.names.length === ROW_COUNT) ? d.names.slice() : defaultNames();
+    lastSystemDate = d.lastSystemDate || todayKey();
+    currentDate = d.currentDate || fmtMdy(new Date());
+    rows = d.rows.map(function(r){
+      var start = r.start != null ? num(r.start) : num(r.yesterday);
+      var cw = r.cumWork != null ? num(r.cumWork) : num(r.baseTotal);
+      var o = {
+        id: uid(),
+        cumWork: cw,
+        start: start,
+        today: (r.today == null ? '' : String(r.today)),
+        nightShift: (r.nightShift == null ? '' : String(r.nightShift)),
+        bigScale: !!r.bigScale,
+        alertOk: !!r.alertOk
+      };
+      ALL_THRESHOLDS.forEach(function(N){
+        var st = r[ckey(N)] || {};
+        o[ckey(N)] = { base: num(st.base), printed: !!st.printed };
+      });
+      return o;
+    });
+    saveNames(); saveLocal();
+    if (!silent) renderAll();
+    return true;
+  }
+
+  function load(){
+    var d=null;
+    try{d=JSON.parse(localStorage.getItem(DATA_KEY)||'null');}catch(e){}
+    if (d) applyPayload(d, true);
+    else {
+      lastSystemDate = todayKey();
+      currentDate = fmtMdy(new Date());
+      rows = defaultRows();
+      saveLocal();
+    }
+  }
+
+  function pushToCloud(){
+    if (!supabase) return;
+    setCloudBadge('sync');
+    supabase.from(TABLE_NAME).upsert({
+      id: ROW_ID, data: buildPayload(), updated_at: new Date().toISOString()
+    }).then(function(res){
+      if (res.error) { setCloudBadge('off'); console.warn('push error:', res.error); }
+      else setCloudBadge('on');
+    }).catch(function(err){ setCloudBadge('off'); console.warn('push catch:', err); });
+  }
+  var pushTimer = null;
+  function saveDebounced(){ saveLocal(); clearTimeout(pushTimer); pushTimer = setTimeout(pushToCloud, 1500); }
+
+  function subscribeToCloud(){
+    if (!supabase) return;
+    supabase.from(TABLE_NAME).select('data').eq('id', ROW_ID).maybeSingle().then(function(res){
+      if (res.error) { setCloudBadge('off'); return; }
+      if (res.data && res.data.data) {
+        var local = null;
+        try { local = JSON.parse(localStorage.getItem(DATA_KEY) || 'null'); } catch(e){}
+        var useCloud = !local || !Array.isArray(local.rows) || local.rows.length !== ROW_COUNT;
+        if (useCloud) applyPayload(res.data.data, false);
+        setCloudBadge('on');
+      } else pushToCloud();
+    }).catch(function(){ setCloudBadge('off'); });
+
+    supabase.channel('drivers-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: TABLE_NAME }, function(payload){
+        var d = payload.new && payload.new.data;
+        if (!d) return;
+        if (d.client_id === CLIENT_ID) { setCloudBadge('on'); return; }
+        var focusedEl = document.activeElement;
+        var focusedRowId = null, focusedCol = null;
+        if (focusedEl && focusedEl.tagName === 'INPUT') {
+          els.forEach(function(e, id){
+            if (e.todayInput === focusedEl) { focusedRowId = id; focusedCol = 'today'; }
+            else if (e.nightInput === focusedEl) { focusedRowId = id; focusedCol = 'night'; }
+            else if (e.nameInput === focusedEl) { focusedRowId = id; focusedCol = 'name'; }
+            else if (e.startInput === focusedEl) { focusedRowId = id; focusedCol = 'start'; }
+            else if (e.totalInput === focusedEl) { focusedRowId = id; focusedCol = 'total'; }
+          });
+        }
+        applyPayload(d, true);
+        renderAll();
+        if (focusedRowId && focusedCol) {
+          var idx = rows.findIndex(function(r){return r.id===focusedRowId;});
+          focusCell(idx, focusedCol);
+        }
+        setCloudBadge('on');
+        setStatus('به‌روزرسانی از دستگاه دیگر');
+      })
+      .subscribe(function(status){
+        if (status === 'SUBSCRIBED') setCloudBadge('on');
+        else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setCloudBadge('off');
+      });
+  }
+
+  /* ═══════════ شیفت روز ═══════════ */
+  function shiftRows(){
+    rows.forEach(function(r){
+      var w = calcWorks(r);
+      /* کارکرد تجمعی از نصب را زیاد کن */
+      r.cumWork = num(r.cumWork) + w.day + w.night;
+
+      /* شروع جدید = آخرین قرائت (اگر ورودی داده شده بود) */
+      var last = num(r.start);
+      if (String(r.today).trim() !== '') last = num(r.today);
+      if (String(r.nightShift).trim() !== '') last = Math.max(last, num(r.nightShift));
+
+      /* فقط اگر کاربر ورودی داده باشد شروع را به‌روز کن */
+      if (String(r.today).trim() !== '' || String(r.nightShift).trim() !== '') {
+        r.start = last;
+      }
+      r.today = ''; r.nightShift = ''; r.alertOk = false;
+    });
+    lastSystemDate = todayKey();
+    currentDate = fmtMdy(new Date());
+    saveDebounced();
+  }
+  function checkDayShift(){
+    var t = todayKey();
+    if (lastSystemDate === t) return false;
+    if (!lastSystemDate) { lastSystemDate = t; saveDebounced(); return false; }
+    shiftRows(); return true;
+  }
+
+  function levelClass(r){
+    if(r.alertOk) return '';
+    var t = cumTotal(r);
+    if (r.bigScale) {
+      if (t >= 100000) return 'lvl-10000';
+      if (t >= 50000)  return 'lvl-5000';
+      if (t >= 20000)  return 'lvl-2000';
+      if (t >= 10000)  return 'lvl-1000';
+      if (t >= 5000)   return 'lvl-500';
+      return '';
+    } else {
+      if (t >= 2000) return 'lvl-10000';
+      if (t >= 1000) return 'lvl-1000';
+      if (t >= 500)  return 'lvl-500';
+      if (t >= 200)  return 'lvl-200';
+      if (t >= 100)  return 'lvl-100';
+      return '';
+    }
+  }
+
+  function updateCounterHeaders(){
+    if (!rows.length) return;
+    var ths = thresholdsOf(rows[0].bigScale);
+    cntHeads.forEach(function(th, i){ th.textContent = 'کـ' + ths[i]; });
+  }
+
+  /* ═══════════ به‌روزرسانی سطر ═══════════ */
+  function updateRow(r){
+    var e = els.get(r.id); if(!e) return;
+    var dayW   = calcDayWork(r);
+    var nightW = calcNightWork(r);
+    var totW   = dayW + nightW;
+    var total  = displayTotal(r);
+
+    if(!editMode){
+      e.tdTotal.textContent = fmtNum(total);
+      var hasToday = String(r.today).trim() !== '';
+      var hasNight = String(r.nightShift).trim() !== '';
+      e.tdDayDiff.textContent   = (hasToday || hasNight) ? fmtNum(dayW) : '';
+      e.tdNightDiff.textContent = hasNight ? fmtNum(nightW) : '';
+      if(totW===0 && !hasToday && !hasNight){ e.tdWorkTotal.textContent = ''; }
+      else { e.tdWorkTotal.textContent = (totW>0?'+':'') + fmtNum(totW); }
+      e.tdWorkTotal.classList.remove('neg','zero');
+      if (totW < 0) e.tdWorkTotal.classList.add('neg');
+      else if (totW === 0 && e.tdWorkTotal.textContent !== '') e.tdWorkTotal.classList.add('zero');
+
+      /* شروع — نمایشی */
+      e.tdStart.textContent = fmtNum(r.start);
+    } else {
+      /* در ویرایش: شروع به‌صورت input */
+      if (e.startInput) e.startInput.value = r.start===0 ? '' : fmtNum(r.start);
+    }
+
+    var ths = thresholdsOf(r.bigScale);
+    ths.forEach(function(N, i){
+      var cell = e.cntCells[i]; if (!cell) return;
+      var prim = cntPrimary(r, N);
+      var sec  = cntSecondary(r, N);
+      cell.querySelector('.prim').textContent = fmtNum(prim);
+      cell.querySelector('.base').textContent = fmtNum(sec);
+      cell.querySelector('.unit').textContent = r.bigScale ? 'km' : 'h';
+      var st = cntStatus(r, N);
+      cell.classList.remove('ready','wait','disabled');
+      if (st === 'ready') cell.classList.add('ready');
+      else if (st === 'wait') cell.classList.add('wait');
+      else if (st === 'disabled') cell.classList.add('disabled');
+      var dis = (st === 'disabled');
+      cell.title = 'کنتور ' + N + (dis ? ' (غیرفعال)' : '') +
+                   ' — اولیه: ' + fmtNum(prim) + ' | ثانویه: ' + fmtNum(sec);
+    });
+
+    var n = r.alertOk ? 0 : highlightCount(cumTotal(r), r.bigScale);
+    var trCls = [];
+    if (r.bigScale) trCls.push('big-scale');
+    var lc = levelClass(r);
+    if (lc) trCls.push(lc);
+    if (n === 5) trCls.push('hl-5');
+    e.tr.className = trCls.join(' ');
+
+    var order = [e.tdName, e.cntCells[0], e.cntCells[1], e.cntCells[2], e.tdTotal];
+    for (var i = 0; i < order.length; i++) {
+      if (order[i]) order[i].classList.toggle('hl', i < n);
+    }
+  }
+
+  /* ═══════════ کلیک کنتور ═══════════ */
+  function handleCounterClick(r, pos){
+    var ths = thresholdsOf(r.bigScale);
+    var N = ths[pos];
+    if (!N) return;
+    var ct = cumTotal(r);
+    if (isCounterDisabled(ct, N)) {
+      setStatus('کنتور ' + N + ' در این بازه غیرفعال است.');
+      return;
+    }
+    var prim = cntPrimary(r, N);
+    var st = cntState(r, N);
+    if (prim < N) {
+      setStatus('کنتور ' + N + ' هنوز آماده نیست (فقط ' + fmtNum(prim) + ').');
+      return;
+    }
+    if (!st.printed) {
+      st.printed = true; saveDebounced(); updateRow(r);
+      var i = rows.indexOf(r);
+      setStatus('دستور ' + N + ' برای «' + (names[i]||'') + '» چاپ شد — منتظر جواب.');
+    } else {
+      var resetList = [];
+      for (var k = 0; k <= pos; k++) {
+        var Y = ths[k];
+        if (isCounterDisabled(ct, Y)) continue;
+        var stY = cntState(r, Y);
+        stY.base = ct;
+        stY.printed = false;
+        resetList.push(Y);
+      }
+      saveDebounced(); updateRow(r);
+      setStatus('دستور ' + N + ' ثبت شد. کنتورهای ' + resetList.join('، ') + ' صفر شدند.');
+    }
+  }
+
+  function clearAlert(r){
+    if(r.alertOk) return;
+    r.alertOk = true; saveDebounced(); updateRow(r);
+    var i=rows.indexOf(r);
+    setStatus('هشدار «'+(names[i]||'')+'» پاک شد.');
+  }
+
+  function focusCell(idx, kind){
+    if(idx<0)idx=0; if(idx>=ROW_COUNT)idx=ROW_COUNT-1;
+    var e=els.get(rows[idx].id); if(!e)return;
+    var el;
+    if (kind==='name') el = e.nameInput;
+    else if (kind==='total') el = e.totalInput;
+    else if (kind==='start') el = e.startInput;
+    else if (kind==='night') el = e.nightInput;
+    else el = e.todayInput;
+    if(el){el.focus();el.select();}
+  }
+
+  /* ═══════════ ساخت سطر ═══════════ */
+  function buildRow(r, idx){
+    var tr=document.createElement('tr');
+
+    var tdTick=document.createElement('td'); tdTick.className='tick-cell';
+    var tick=document.createElement('input'); tick.type='checkbox'; tick.className='tick-box'; tick.checked=!!r.bigScale;
+    tick.title='مقیاس کیلومتر';
+    tick.addEventListener('change',function(){
+      r.bigScale = tick.checked; r.alertOk = false;
+      saveDebounced(); updateRow(r); updateCounterHeaders();
+      setStatus(r.bigScale ? 'مقیاس: کیلومتر' : 'مقیاس: ساعت');
+    });
+    tick.addEventListener('dblclick',function(ev){ev.stopPropagation();});
+    tdTick.appendChild(tick);
+
+    var tdNo=document.createElement('td'); tdNo.className='row-num';
+    tdNo.textContent=(idx+1).toLocaleString('fa-IR');
+
+    var tdName=document.createElement('td'); tdName.className='name-cell'; var nameInput=null;
+    if(editMode){
+      nameInput=document.createElement('input');
+      nameInput.className='name-input'; nameInput.type='text';
+      nameInput.value=names[idx]||''; nameInput.placeholder='نام '+(idx+1);
+      nameInput.addEventListener('input',function(){names[idx]=nameInput.value;saveNames();saveDebounced();});
+      nameInput.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'name');}
+        else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'name');}
+      });
+      tdName.appendChild(nameInput);
+    } else tdName.textContent=names[idx]||'';
+
+    var cntCells = [];
+    for (var i = 0; i < 5; i++) {
+      (function(pos){
+        var td = document.createElement('td');
+        td.className = 'cnt-cell';
+        var prim = document.createElement('div'); prim.className = 'prim';
+        var base = document.createElement('div'); base.className = 'base';
+        var unit = document.createElement('div'); unit.className = 'unit';
+        td.appendChild(prim); td.appendChild(base); td.appendChild(unit);
+        td.addEventListener('click', function(ev){ ev.stopPropagation(); handleCounterClick(r, pos); });
+        td.addEventListener('dblclick', function(ev){ ev.stopPropagation(); });
+        cntCells.push(td);
+      })(i);
+    }
+
+    var tdDayDiff=document.createElement('td'); tdDayDiff.className='day-diff-cell';
+    var tdNightDiff=document.createElement('td'); tdNightDiff.className='night-diff-cell';
+    var tdWorkTotal=document.createElement('td'); tdWorkTotal.className='diff-cell';
+
+    /* ── ستون شروع ── */
+    var tdStart=document.createElement('td'); tdStart.className='num start-cell';
+    var startInput=null;
+    if(editMode){
+      startInput=document.createElement('input');
+      startInput.className='num start-input'; startInput.type='text'; startInput.inputMode='decimal';
+      startInput.placeholder='0';
+      startInput.value = r.start===0 ? '' : r.start;
+      startInput.addEventListener('focus',function(){startInput.select();});
+      startInput.addEventListener('input',function(){
+        r.start = num(startInput.value);
+        saveDebounced(); updateRow(r);
+      });
+      startInput.addEventListener('dblclick',function(ev){ev.stopPropagation();});
+      startInput.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'start');}
+        else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'start');}
+      });
+      tdStart.appendChild(startInput);
+    } else {
+      tdStart.textContent = fmtNum(r.start);
+    }
+
+    var tdToday=document.createElement('td');
+    var todayInput=document.createElement('input');
+    todayInput.className='num today-input'; todayInput.type='text'; todayInput.inputMode='decimal';
+    todayInput.placeholder='—'; todayInput.value=r.today;
+    todayInput.addEventListener('focus',function(){todayInput.select();});
+    todayInput.addEventListener('input',function(){r.today=todayInput.value;saveDebounced();updateRow(r);});
+    todayInput.addEventListener('dblclick',function(ev){ev.stopPropagation();});
+    todayInput.addEventListener('keydown',function(ev){
+      if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'today');}
+      else if(ev.key==='ArrowUp'){ev.preventDefault(); if(editMode) focusCell(idx,'start'); }
+    });
+    tdToday.appendChild(todayInput);
+
+    var tdNight=document.createElement('td'); tdNight.className='num night-cell';
+    var nightInput=document.createElement('input');
+    nightInput.className='night-input'; nightInput.type='text'; nightInput.inputMode='decimal';
+    nightInput.placeholder='—'; nightInput.value=r.nightShift;
+    nightInput.addEventListener('focus',function(){nightInput.select();});
+    nightInput.addEventListener('input',function(){r.nightShift=nightInput.value;saveDebounced();updateRow(r);});
+    nightInput.addEventListener('dblclick',function(ev){ev.stopPropagation();});
+    nightInput.addEventListener('keydown',function(ev){
+      if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'today');}
+      else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx,'today');}
+    });
+    tdNight.appendChild(nightInput);
+
+    var tdTotal=document.createElement('td'); tdTotal.className='num total-cell col-total'; var totalInput=null;
+    if(editMode){
+      totalInput=document.createElement('input');
+      totalInput.className='total-input'; totalInput.type='text'; totalInput.inputMode='decimal';
+      totalInput.value = r.cumWork===0 ? '' : r.cumWork; totalInput.placeholder='0';
+      totalInput.title = 'کارکرد تجمعی از نصب (برای کنتورها)';
+      totalInput.addEventListener('input',function(){r.cumWork=num(totalInput.value);saveDebounced();updateRow(r);});
+      totalInput.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'total');}
+        else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'total');}
+      });
+      tdTotal.appendChild(totalInput);
+    } else tdTotal.textContent = fmtNum(displayTotal(r));
+
+    tr.appendChild(tdTick); tr.appendChild(tdNo); tr.appendChild(tdName);
+    cntCells.forEach(function(td){ tr.appendChild(td); });
+    tr.appendChild(tdDayDiff); tr.appendChild(tdNightDiff); tr.appendChild(tdWorkTotal);
+    tr.appendChild(tdStart); tr.appendChild(tdToday); tr.appendChild(tdNight);
+    tr.appendChild(tdTotal);
+
+    tr.addEventListener('dblclick',function(ev){
+      if(ev.target.tagName==='INPUT') return;
+      if(ev.target.closest('.cnt-cell')) return;
+      clearAlert(r);
+    });
+
+    els.set(r.id, {
+      tr: tr, tdName: tdName, tdTotal: tdTotal, tdStart: tdStart,
+      tdDayDiff: tdDayDiff, tdNightDiff: tdNightDiff, tdWorkTotal: tdWorkTotal,
+      tdToday: tdToday, tdNight: tdNight,
+      todayInput: todayInput, nightInput: nightInput, startInput: startInput,
+      nameInput: nameInput, totalInput: totalInput,
+      cntCells: cntCells
+    });
+    updateRow(r);
+    return tr;
+  }
+
+  function updateHeaderDate(){
+    var d = new Date();
+    var shown = currentDate || fmtMdy(d);
+    dateInput.value = shown;
+    try {
+      var parts = shown.split('/');
+      if (parts.length === 3) {
+        var m = parseInt(parts[0],10), dd = parseInt(parts[1],10), yy = parseInt(parts[2],10);
+        yy = yy < 100 ? 2000 + yy : yy;
+        var greg = new Date(yy, m-1, dd);
+        dateJalali.textContent = fmtJalali(greg);
+      } else { dateJalali.textContent = ''; }
+    } catch(e) { dateJalali.textContent = ''; }
+
+    thToday.innerHTML = '<div class="th-date">'+shown+'</div><div class="th-sub">'+fmtJalali(d)+'</div>';
+  }
+
+  function renderAll(){
+    var focusIdx=-1, focusKind=null;
+    if(document.activeElement && document.activeElement.tagName==='INPUT'){
+      els.forEach(function(e,id){
+        var i = rows.findIndex(function(r){return r.id===id;});
+        if(e.todayInput===document.activeElement){focusIdx=i;focusKind='today';}
+        else if(e.nightInput===document.activeElement){focusIdx=i;focusKind='night';}
+        else if(e.nameInput===document.activeElement){focusIdx=i;focusKind='name';}
+        else if(e.startInput===document.activeElement){focusIdx=i;focusKind='start';}
+        else if(e.totalInput===document.activeElement){focusIdx=i;focusKind='total';}
+      });
+    }
+    tbody.innerHTML=''; els.clear();
+    rows.forEach(function(r,i){tbody.appendChild(buildRow(r,i));});
+    updateHeaderDate(); updateCounterHeaders();
+    if(focusIdx>=0) focusCell(focusIdx,focusKind||'today');
+  }
+
+  dateInput.addEventListener('input', function(){
+    currentDate = dateInput.value.trim();
+    saveDebounced();
+    try {
+      var parts = currentDate.split('/');
+      if (parts.length === 3) {
+        var m = parseInt(parts[0],10), dd = parseInt(parts[1],10), yy = parseInt(parts[2],10);
+        yy = yy < 100 ? 2000 + yy : yy;
+        var greg = new Date(yy, m-1, dd);
+        dateJalali.textContent = fmtJalali(greg);
+        thToday.innerHTML = '<div class="th-date">'+currentDate+'</div><div class="th-sub">'+fmtJalali(greg)+'</div>';
+      }
+    } catch(e){}
+  });
+  document.getElementById('setTodayBtn').addEventListener('click', function(){
+    var d = new Date();
+    currentDate = fmtMdy(d);
+    dateInput.value = currentDate;
+    dateJalali.textContent = fmtJalali(d);
+    thToday.innerHTML = '<div class="th-date">'+currentDate+'</div><div class="th-sub">'+fmtJalali(d)+'</div>';
+    saveDebounced();
+    setStatus('تاریخ به امروز برگشت.');
+  });
+
+  var editBtn=document.getElementById('editBtn');
+  editBtn.addEventListener('click',function(){
+    editMode=!editMode;
+    editBtn.classList.toggle('active',editMode);
+    editBtn.textContent = editMode ? '✔ پایان ویرایش' : '✎ ویرایش اولیه';
+    renderAll();
+    if(editMode){ setStatus('ویرایش فعال — حالا می‌توانی شروع را تغییر دهی.'); focusCell(0,'name'); }
+    else { saveNames(); saveDebounced(); setStatus('ذخیره شد.'); }
+  });
+
+  document.getElementById('shiftBtn').addEventListener('click',function(){
+    if(!confirm('شیفت روز انجام شود؟\nکارکرد روز و شب به کارکرد تجمعی اضافه می‌شود و شروع = آخرین قرائت.')) return;
+    shiftRows(); renderAll(); setStatus('شیفت روز انجام شد.');
+  });
+
+  document.getElementById('toggleTotalBtn').addEventListener('click',function(){
+    mainTable.classList.toggle('hide-total');
+    var hidden = mainTable.classList.contains('hide-total');
+    this.textContent = hidden ? '🚫 مجموع (پنهان)' : '👁 مجموع';
+    this.classList.toggle('active', !hidden);
+    setStatus(hidden ? 'ستون مجموع پنهان شد.' : 'ستون مجموع نمایش داده می‌شود.');
+  });
+
+  document.getElementById('resetCntBtn').addEventListener('click',function(){
+    if(!confirm('همه کنتورها صفر شوند؟ (کارکرد تجمعی دست‌نخورده)')) return;
+    rows.forEach(function(r){
+      ALL_THRESHOLDS.forEach(function(N){ r[ckey(N)] = { base: 0, printed: false }; });
+    });
+    saveDebounced(); renderAll(); setStatus('کنتورها بازنشانی شد.');
+  });
+
+  document.getElementById('resetBtn').addEventListener('click',function(){
+    if(!confirm('همه ساعات و کنتورها پاک شود؟ (نام‌ها دست‌نخورده)')) return;
+    rows.forEach(function(r){
+      r.cumWork=0; r.today=''; r.nightShift=''; r.start=0; r.alertOk=false;
+      ALL_THRESHOLDS.forEach(function(N){ r[ckey(N)] = { base: 0, printed: false }; });
+    });
+    lastSystemDate=todayKey();
+    currentDate=fmtMdy(new Date());
+    saveDebounced(); renderAll(); setStatus('بازنشانی کل انجام شد.');
+  });
+
+  document.getElementById('exportBtn').addEventListener('click',function(){
+    var blob=new Blob([JSON.stringify(buildPayload(),null,2)],{type:'application/json'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='drivers-backup-'+todayKey()+'.json';
+    a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+    setStatus('فایل پشتیبان ساخته شد.');
+  });
+
+  var fileInput=document.getElementById('fileInput');
+  document.getElementById('importBtn').addEventListener('click',function(){ fileInput.click(); });
+  fileInput.addEventListener('change',function(){
+    var f=fileInput.files && fileInput.files[0]; if(!f) return;
+    var rd=new FileReader();
+    rd.onload=function(){
+      try{
+        var d=JSON.parse(rd.result);
+        if(!applyPayload(d, false)) throw new Error('تعداد سطرها مطابق نیست');
+        pushToCloud(); setStatus('داده‌ها بازیابی شد.');
+      }catch(err){ alert('فایل نامعتبر: '+err.message); }
+      fileInput.value='';
+    };
+    rd.readAsText(f);
+  });
+
+  names = loadNames();
+  load();
+  var shifted = checkDayShift();
+  renderAll();
+  if(shifted) setStatus('روز جدید — ستون‌ها شیفت شد.');
+
+  if (supabase) subscribeToCloud();
+  else setCloudBadge('off');
+
+  setInterval(function(){
+    if(checkDayShift()){ renderAll(); setStatus('روز جدید — شیفت شد.'); }
+  }, 30000);
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  }
+})();
+</script>
+</body>
+</html>
