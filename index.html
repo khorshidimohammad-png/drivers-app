@@ -13,7 +13,7 @@
 <style>
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{font-family:Vazirmatn,Tahoma,sans-serif;background:#f4f6f9;margin:0;padding:12px;direction:rtl;color:#1f2937}
-  .wrap{max-width:1220px;margin:0 auto}
+  .wrap{max-width:1520px;margin:0 auto}
   h1{font-size:16px;margin:0 0 3px}
   .sub{color:#6b7280;font-size:11px;margin-bottom:10px}
   .toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
@@ -22,78 +22,90 @@
   .toolbar button.ghost{background:#fff;color:#374151;border:1px solid #d1d5db}
   .toolbar button.warn{background:#fff;color:#dc2626;border:1px solid #fecaca}
   .toolbar button.active{background:#16a34a;color:#fff;border-color:#16a34a}
+  .toolbar button.report{background:#7c3aed}
   #status{font-size:11px;color:#6b7280;margin-inline-start:auto}
   .cloud-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
   .cloud-on{background:#dcfce7;color:#166534}
   .cloud-off{background:#fee2e2;color:#991b1b}
   .cloud-sync{background:#fef3c7;color:#92400e}
 
+  .date-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:linear-gradient(90deg,#dbeafe,#e0e7ff);border:2px solid #93c5fd;border-radius:10px;padding:10px 14px;margin-bottom:12px;box-shadow:0 2px 6px rgba(37,99,235,.08)}
+  .date-label{font-size:14px;font-weight:700;color:#1e40af}
+  .date-input{font-family:inherit;font-size:18px;font-weight:700;color:#1e3a8a;background:#fff;border:2px solid #60a5fa;border-radius:8px;padding:6px 12px;text-align:center;direction:ltr;min-width:150px;font-variant-numeric:tabular-nums}
+  .date-input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.2)}
+  .date-jalali{font-size:14px;color:#4f46e5;font-weight:600;background:#fff;padding:6px 12px;border-radius:8px;border:1px dashed #a5b4fc}
+  .date-bar button{background:#1e40af;color:#fff;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:11px}
+
   .formula{background:#f1f5f9;border-radius:8px;padding:7px 10px;font-size:11px;color:#334155;margin-bottom:10px;line-height:1.8}
   .formula code{background:#fff;padding:1px 4px;border-radius:4px;color:#1d4ed8;font-family:Consolas,monospace;direction:ltr;display:inline-block}
 
-  .table-scroll{max-height:78vh;overflow:auto;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);background:#fff;border:1px solid #cbd5e1;-webkit-overflow-scrolling:touch}
-  table{width:100%;border-collapse:collapse;background:#fff;min-width:940px}
-  thead th{position:sticky;top:0;z-index:2;background:#e2e8f0;font-size:11px;color:#334155;font-weight:700;padding:4px;text-align:center;border:1px solid #cbd5e1;white-space:nowrap}
-  tbody td{padding:1px 3px;text-align:center;border:1px solid #e2e8f0;font-size:12px;line-height:1.2}
+  .table-scroll{max-height:75vh;overflow:auto;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);background:#fff;border:1px solid #cbd5e1;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;background:#fff;min-width:1280px}
+  thead th{position:sticky;top:0;z-index:2;background:#e2e8f0;font-size:10.5px;color:#334155;font-weight:700;padding:4px 2px;text-align:center;border:1px solid #cbd5e1;white-space:nowrap}
+  tbody td{padding:1px 2px;text-align:center;border:1px solid #e2e8f0;font-size:12px;line-height:1.2}
   tbody tr.row-num td:first-child{color:#94a3b8;font-size:10px}
   .th-date{font-size:12px;color:#0f172a;font-weight:700}
   .th-sub{font-size:9px;color:#64748b;margin-top:1px;font-weight:400}
 
   td.num{font-variant-numeric:tabular-nums}
   .name-cell{text-align:right;font-weight:600;color:#334155}
-  .total-cell{font-weight:700;color:#0f172a}
   .diff-cell{font-weight:700;color:#7c3aed;font-variant-numeric:tabular-nums}
   .diff-cell.neg{color:#dc2626}
   .diff-cell.zero{color:#94a3b8}
-  .yest-cell{color:#64748b;font-variant-numeric:tabular-nums}
+  .start-cell{background:#e0f7fa !important;font-weight:700;color:#0e7490;font-variant-numeric:tabular-nums;padding:2px 3px !important}
+  .start-cell .acc-line{font-weight:700;color:#0e7490;font-size:12.5px;line-height:1.1}
+  .start-cell .reading-line{font-size:9px;color:#0891b2;line-height:1;margin-top:1px}
+  .start-cell input{background:transparent;color:#0e7490;border:none;font-family:inherit;width:100%;text-align:center;padding:1px 2px;border-radius:3px}
+  .start-cell input:focus{background:#fff;color:#0f172a;outline:none;box-shadow:0 0 0 2px #0e7490 inset}
+  .start-cell .rd-input{font-size:10px;color:#0891b2}
   .day-diff-cell{font-weight:600;color:#0891b2;font-size:11px}
   .night-diff-cell{font-weight:600;color:#0369a1;font-size:11px}
 
-  td.hl {
-    background: linear-gradient(180deg, #fef3c7, #fde68a) !important;
-    box-shadow: inset 0 0 0 2px #f59e0b, inset 0 0 10px rgba(245,158,11,.25);
-  }
-  tr.hl-5 td.hl {
-    background: linear-gradient(180deg, #fecaca, #fca5a5) !important;
-    box-shadow: inset 0 0 0 2px #dc2626, inset 0 0 12px rgba(220,38,38,.4);
-    animation: hlPulse 1.4s infinite;
-  }
-  @keyframes hlPulse{ 0%,100%{opacity:1} 50%{opacity:.72} }
+  .cnt-cell{width:50px;padding:1px 2px !important;cursor:pointer;text-align:center;vertical-align:middle;transition:background-color .15s;user-select:none;position:relative}
+  .cnt-cell .prim{font-weight:700;font-size:11.5px;line-height:1.05;color:#334155;font-variant-numeric:tabular-nums}
+  .cnt-cell .base{font-size:9px;line-height:1.05;color:#94a3b8;font-variant-numeric:tabular-nums;margin-top:1px}
+  .cnt-cell .unit{font-size:8px;color:#94a3b8;line-height:1;margin-top:1px}
+  .cnt-cell.ready{background:#fde047 !important;animation:cntPulse 1s infinite;box-shadow:inset 0 0 0 2px #ca8a04}
+  .cnt-cell.ready .prim{color:#78350f}
+  .cnt-cell.wait{background:#93c5fd !important;box-shadow:inset 0 0 0 2px #2563eb}
+  .cnt-cell.wait .prim{color:#1e3a8a}
+  .cnt-cell.disabled{background:#e5e7eb !important;cursor:not-allowed;opacity:.55}
+  .cnt-cell.disabled .prim{color:#94a3b8;text-decoration:line-through}
+  .cnt-cell.disabled::after{content:'✕';position:absolute;top:1px;left:2px;font-size:9px;color:#dc2626;font-weight:700}
+  @keyframes cntPulse{0%,100%{opacity:1}50%{opacity:.65}}
 
-  .today-input,.yest-input,.name-input,.total-input,.night-input{
-    width:100%;border:none;background:transparent;font-family:inherit;
-    padding:2px 3px;color:#0f172a;border-radius:4px;font-size:12px;
-  }
+  td.hl{background:linear-gradient(180deg,#fef3c7,#fde68a) !important;box-shadow:inset 0 0 0 2px #f59e0b, inset 0 0 10px rgba(245,158,11,.25)}
+  tr.hl-5 td.hl{background:linear-gradient(180deg,#fecaca,#fca5a5) !important;box-shadow:inset 0 0 0 2px #dc2626, inset 0 0 12px rgba(220,38,38,.4);animation:hlPulse 1.4s infinite}
+  @keyframes hlPulse{0%,100%{opacity:1}50%{opacity:.72}}
+
+  .today-input,.night-input,.name-input{width:100%;border:none;background:transparent;font-family:inherit;padding:2px 3px;color:#0f172a;border-radius:4px;font-size:12px}
   .today-input{text-align:center;font-size:13px;font-weight:700}
-  .yest-input{text-align:center;font-size:12px;font-weight:600;color:#475569}
   .night-input{text-align:center;font-size:12px;font-weight:600;color:#0369a1;background:#f0f9ff}
-  .total-input{text-align:center;font-size:12px;font-weight:700;color:#1d4ed8;background:#eff6ff}
   .name-input{text-align:right;font-size:12px;font-weight:600}
   .today-input:focus{outline:none;background:#eff6ff;box-shadow:0 0 0 2px #2563eb inset}
   .night-input:focus{outline:none;background:#e0f2fe;box-shadow:0 0 0 2px #0284c7 inset}
-  .yest-input:focus,.name-input:focus{outline:none;background:#f0fdf4;box-shadow:0 0 0 2px #16a34a inset}
-  .total-input:focus{outline:none;background:#dbeafe;box-shadow:0 0 0 2px #2563eb inset}
-  .today-input::placeholder,.yest-input::placeholder,.night-input::placeholder{color:#cbd5e1;font-weight:400}
+  .name-input:focus{outline:none;background:#f0fdf4;box-shadow:0 0 0 2px #16a34a inset}
+  .today-input::placeholder,.night-input::placeholder{color:#cbd5e1;font-weight:400}
 
   .tick-cell{width:32px;padding:1px !important;text-align:center}
   .tick-box{appearance:none;-webkit-appearance:none;width:15px;height:15px;border:2px solid #cbd5e1;border-radius:4px;background:#fff;cursor:pointer;position:relative;vertical-align:middle}
   .tick-box:checked{background:#7c3aed;border-color:#7c3aed}
   .tick-box:checked::after{content:'';position:absolute;top:1px;left:3.5px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 
-  tr.lvl-100  td{background:#e8f8ee}
-  tr.lvl-200  td{background:#fff7d6}
-  tr.lvl-500  td{background:#ffe8c9}
+  tr.lvl-100 td{background:#e8f8ee}
+  tr.lvl-200 td{background:#fff7d6}
+  tr.lvl-500 td{background:#ffe8c9}
   tr.lvl-1000 td{background:#ffd9d9}
-  tr.lvl-5000  td{background:#ffe0cc}
+  tr.lvl-5000 td{background:#ffe0cc}
   tr.lvl-10000 td{background:#ffc6c6;animation:pulse 1.4s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.72}}
 
   tr[class*="lvl-"] td:first-child{border-inline-start:3px solid transparent}
-  tr.lvl-100  td:first-child{border-inline-start-color:#22c55e}
-  tr.lvl-200  td:first-child{border-inline-start-color:#eab308}
-  tr.lvl-500  td:first-child{border-inline-start-color:#f97316}
+  tr.lvl-100 td:first-child{border-inline-start-color:#22c55e}
+  tr.lvl-200 td:first-child{border-inline-start-color:#eab308}
+  tr.lvl-500 td:first-child{border-inline-start-color:#f97316}
   tr.lvl-1000 td:first-child{border-inline-start-color:#dc2626}
-  tr.lvl-5000  td:first-child{border-inline-start-color:#ea580c}
+  tr.lvl-5000 td:first-child{border-inline-start-color:#ea580c}
   tr.lvl-10000 td:first-child{border-inline-start-color:#b91c1c}
   tr.big-scale td{box-shadow:inset 0 0 0 100px rgba(124,58,237,.04)}
   tr.big-scale .tick-cell{border-inline-end:2px solid #7c3aed !important}
@@ -103,36 +115,111 @@
   .sw{width:11px;height:11px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.1)}
   .sw100{background:#e8f8ee}.sw200{background:#fff7d6}.sw500{background:#ffe8c9}.sw1000{background:#ffd9d9}
   .sw5000{background:#ffe0cc}.sw10000{background:#ffc6c6}
+  .sw-ready{background:#fde047}.sw-wait{background:#93c5fd}.sw-dis{background:#e5e7eb}
+  .sw-start{background:#e0f7fa}
   .legend .sep{width:1px;background:#cbd5e1;margin:0 3px}
   .hint{margin-top:10px;font-size:10.5px;color:#94a3b8;line-height:1.8}
   .hint b{color:#475569}
+
+  /* ═══ Report Modal ═══ */
+  .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.55);z-index:1000;padding:14px;overflow:auto}
+  .modal.open{display:block}
+  .modal-content{background:#fff;max-width:1400px;margin:0 auto;border-radius:12px;box-shadow:0 20px 40px rgba(0,0,0,.3);overflow:hidden}
+  .modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#7c3aed;color:#fff}
+  .modal-header h2{margin:0;font-size:16px;font-weight:700}
+  .modal-header .close-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:14px}
+  .modal-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+  .modal-controls label{font-size:12px;color:#334155;font-weight:600;display:flex;align-items:center;gap:6px}
+  .modal-controls input{font-family:inherit;font-size:14px;font-weight:700;color:#0f172a;background:#fff;border:2px solid #cbd5e1;border-radius:6px;padding:5px 10px;text-align:center;direction:ltr;min-width:110px;font-variant-numeric:tabular-nums}
+  .modal-controls input:focus{outline:none;border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+  .modal-controls button{background:#7c3aed;color:#fff;border:none;padding:7px 14px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600}
+  .modal-controls button.print{background:#059669}
+  .modal-controls button.range{background:#fff;color:#475569;border:1px solid #cbd5e1}
+  #reportArea{padding:20px;overflow:auto;max-height:calc(100vh - 180px)}
+
+  .rep-header{text-align:center;margin-bottom:18px;padding-bottom:14px;border-bottom:3px double #334155}
+  .rep-header h1{margin:0 0 8px;font-size:22px;color:#0f172a;font-weight:700}
+  .rep-header .rep-meta{font-size:13px;color:#475569;line-height:1.8}
+  .rep-header .rep-meta strong{color:#7c3aed}
+  .rep-empty{text-align:center;color:#94a3b8;padding:30px;font-size:14px}
+
+  .rep-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+  .rep-table th,.rep-table td{border:1px solid #94a3b8;padding:6px 4px;text-align:center}
+  .rep-table th{background:#e2e8f0;font-weight:700;color:#1e293b;font-size:11px}
+  .rep-table td{background:#fff}
+  .rep-table tr:nth-child(even) td{background:#f8fafc}
+  .rep-table .rep-name{text-align:right;font-weight:700;background:#f1f5f9 !important;white-space:nowrap;position:sticky;right:0;z-index:1}
+  .rep-table .rep-total{background:#fef3c7 !important;font-weight:800;color:#92400e}
+  .rep-table .rep-bottom td{background:#fef9c3 !important;font-weight:700;color:#78350f;border-top:2px solid #334155}
+  .rep-table .rep-bottom .rep-name{background:#fde68a !important}
+  .rep-table .rep-bottom .rep-total{background:#fbbf24 !important;color:#78350f}
+
+  @media print{
+    body > *:not(.modal){display:none !important}
+    .modal{position:static !important;display:block !important;background:#fff !important;padding:0 !important}
+    .modal-header{display:none !important}
+    .modal-controls{display:none !important}
+    .modal-content{box-shadow:none !important;max-width:none !important;border-radius:0 !important}
+    #reportArea{padding:0 !important;max-height:none !important;overflow:visible !important}
+    .rep-table th,.rep-table td{border-color:#000 !important}
+    .rep-table .rep-name{position:static !important}
+    @page{size:A4 landscape;margin:1cm}
+  }
+
   @media(max-width:720px){
     body{padding:6px}
     h1{font-size:14px}
+    .date-bar{padding:8px 10px}
+    .date-input{font-size:14px;min-width:110px;padding:4px 8px}
+    .date-jalali{font-size:11px;padding:4px 8px}
     .toolbar button{padding:5px 8px;font-size:10px}
     thead th,tbody td{padding:1px 2px;font-size:10px}
-    .today-input{font-size:11px}.night-input,.yest-input,.total-input,.name-input{font-size:10px}
+    .today-input{font-size:11px}.night-input,.name-input{font-size:10px}
+    .start-cell .acc-line{font-size:10px}
+    .start-cell .reading-line{font-size:8px}
     .th-sub{display:none}.tick-box{width:13px;height:13px}
-    .table-scroll{max-height:82vh}
-    table{min-width:840px}
+    .table-scroll{max-height:78vh}
+    table{min-width:1150px}
+    .cnt-cell{width:44px}
+    .cnt-cell .prim{font-size:10px}
+    .cnt-cell .base,.cnt-cell .unit{font-size:8px}
+    .modal{padding:6px}
+    .modal-controls{padding:10px}
+    .modal-controls label{font-size:11px}
+    .modal-controls input{min-width:90px;font-size:12px}
+    #reportArea{padding:12px;max-height:calc(100vh - 140px)}
+    .rep-header h1{font-size:16px}
+    .rep-header .rep-meta{font-size:11px}
+    .rep-table{font-size:10px}
+    .rep-table th,.rep-table td{padding:4px 2px}
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>گزارش کارکرد رانندگان <span id="cloudBadge" class="cloud-badge cloud-off">آفلاین</span></h1>
-  <div class="sub">۵۰ سطر · منطق هوشمند شب‌کاری · همگام‌سازی ابری</div>
+  <div class="sub">۵۰ سطر · شروع (کنتور کل) + قرائت قبل · گزارش دوره‌ای با پرینت</div>
+
+  <div class="date-bar">
+    <span class="date-label">📅 تاریخ امروز:</span>
+    <input type="text" id="dateInput" class="date-input" placeholder="9/30/26" dir="ltr">
+    <span class="date-jalali" id="dateJalali">—</span>
+    <button id="setTodayBtn">بازگشت به امروز</button>
+  </div>
 
   <div class="formula">
-    برنامه سه مقدار می‌گیرد: <b>دیروز</b> (پایه) · <b>امروز</b> · <b>شب</b>. کوچک‌تر بین امروز/شب = پایان روز، بزرگ‌تر = پایان شب.<br>
-    <code>کارکرد روز = پایان روز − دیروز</code> · <code>کارکرد شب = پایان شب − پایان روز</code> · <code>مجموع = مجموع قبلی + کارکرد روز + کارکرد شب</code><br>
-    مثال: دیروز=۴۱۲۹، شب=۴۱۳۷، امروز=۴۱۴۰ → روز = ۸ · شب = ۳ · جمع = ۱۱
+    <b>شروع</b> = کنتور کل دستگاه (ادومتر — همیشه جمع می‌شود) · <b>قرائت قبل</b> = آخرین عدد کُنتور فیزیکی (زیر شروع)<br>
+    <code>کارکرد روز = امروز − قرائت قبل</code> · <code>کارکرد شب = شب − امروز</code><br>
+    <b>هر بار «شیفت روز» بزنی، کارکرد امروز در تاریخچه ذخیره می‌شود.</b><br>
+    <b>مقیاس ساعت:</b> <code>100 · 200 · 500 · 1000 · 2000</code> · <b>کیلومتر (تیک):</b> <code>5000 · 10000 · 20000 · 50000 · 100000</code>
   </div>
 
   <div class="toolbar">
     <button id="editBtn" class="ghost">✎ ویرایش اولیه</button>
     <button id="shiftBtn" class="ghost">شیفت روز</button>
-    <button id="resetBtn" class="warn">بازنشانی</button>
+    <button id="reportBtn" class="report">📊 گزارش دوره‌ای</button>
+    <button id="resetCntBtn" class="ghost">↺ بازنشانی کنتورها</button>
+    <button id="resetBtn" class="warn">بازنشانی کل</button>
     <button id="exportBtn" class="ghost">⇩ خروجی</button>
     <button id="importBtn" class="ghost">⇧ بازیابی</button>
     <input type="file" id="fileInput" accept="application/json" hidden>
@@ -143,16 +230,20 @@
     <table>
       <thead>
         <tr>
-          <th style="width:28px">✓</th>
-          <th style="width:32px">#</th>
-          <th style="width:15%">نام</th>
-          <th style="width:10%">مجموع</th>
-          <th style="width:8%">ک.روز</th>
-          <th style="width:8%">ک.شب</th>
-          <th style="width:9%">جمع کارکرد</th>
-          <th style="width:13%" id="thToday"></th>
-          <th style="width:10%">شیفت شب</th>
-          <th style="width:10%">دیروز</th>
+          <th style="width:26px">✓</th>
+          <th style="width:30px">#</th>
+          <th style="width:12%">نام</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th class="cnt-head" style="width:50px">کنتور</th>
+          <th style="width:6%">ک.روز</th>
+          <th style="width:6%">ک.شب</th>
+          <th style="width:6%">جمع</th>
+          <th style="width:11%;background:#cffafe">شروع / قرائت قبل</th>
+          <th style="width:15%" id="thToday"></th>
+          <th style="width:9%">شب</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -160,21 +251,45 @@
   </div>
 
   <div class="legend">
-    <span><b>عادی:</b></span>
+    <span><b>سطر:</b></span>
     <span><i class="sw sw100"></i> ۱۰۰</span>
     <span><i class="sw sw200"></i> ۲۰۰</span>
     <span><i class="sw sw500"></i> ۵۰۰</span>
     <span><i class="sw sw1000"></i> ۱۰۰۰</span>
     <span class="sep"></span>
-    <span><b>مقیاس بزرگ:</b></span>
-    <span><i class="sw sw5000"></i> ۵۰۰۰</span>
-    <span><i class="sw sw10000"></i> ۱۰۰۰۰</span>
+    <span><b>کنتور:</b></span>
+    <span><i class="sw sw-ready"></i> آماده چاپ</span>
+    <span><i class="sw sw-wait"></i> چاپ شد</span>
+    <span><i class="sw sw-dis"></i> غیرفعال</span>
+    <span class="sep"></span>
+    <span><i class="sw sw-start"></i> شروع / قرائت قبل</span>
   </div>
 
   <div class="hint">
-    ✔ هر کدام از ستون‌های «امروز» و «شب» را که پر کنی، برنامه خودش می‌فهمد کدام پایان روز است و کدام پایان شب.<br>
-    ✔ اگر فقط یکی را پر کنی، همان لحظه محاسبه می‌شود؛ وقتی دیگری را هم پر کردی، تفکیک خودکار انجام می‌شود.<br>
-    ✔ هرگز عدد منفی نمایش داده نمی‌شود · Enter = سطر بعد · دابل‌کلیک = پاک کردن هشدار.
+    ✔ <b>شیفت روز</b> کارکرد امروز را در تاریخچه ذخیره می‌کند و شروع = شروع + کارکرد می‌شود.<br>
+    ✔ <b>گزارش دوره‌ای:</b> دو تاریخ بده (مثلاً <code dir="ltr">9/1/26</code> و <code dir="ltr">9/30/26</code>) و ببین.<br>
+    ✔ <b>چاپ:</b> خروجی A4 افقی، مناسب بایگانی.<br>
+    ✔ Enter = سطر بعد · دابل‌کلیک روی سطر = پاک کردن هشدار.
+  </div>
+</div>
+
+<!-- ═══ Report Modal ═══ -->
+<div class="modal" id="reportModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>📊 گزارش دوره‌ای کارکرد</h2>
+      <button class="close-btn" id="closeReport">✕ بستن</button>
+    </div>
+    <div class="modal-controls">
+      <label>از تاریخ: <input type="text" id="repFrom" dir="ltr" placeholder="9/1/26"></label>
+      <label>تا تاریخ: <input type="text" id="repTo" dir="ltr" placeholder="9/30/26"></label>
+      <button id="repShow">نمایش</button>
+      <button class="range" id="repThisMonth">این ماه</button>
+      <button class="range" id="repLast7">۷ روز اخیر</button>
+      <button class="range" id="repToday">امروز</button>
+      <button class="print" id="repPrint">🖨 چاپ</button>
+    </div>
+    <div id="reportArea"></div>
   </div>
 </div>
 
@@ -184,38 +299,84 @@
   'use strict';
 
   /* ═══════════ این خط را با URL پروژه خودت پر کن ═══════════ */
-  var SUPABASE_URL = 'https://bazrqcsuxrwvnyvqbgkw.supabase.co';
+  var SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_nE1QDolEJKcgKzAxT1L44Q_7o811Nry';
   /* ═══════════════════════════════════════════════════════════ */
 
-  var TABLE_NAME = 'drivers';
-  var ROW_ID = 1;
+  var TABLE_NAME = 'drivers', ROW_ID = 1;
   var CLIENT_ID = 'c' + Math.random().toString(36).slice(2, 10);
-
-  var DATA_KEY = 'driver-hours-50-v10';
-  var NAME_KEY = 'driver-names-50-v10';
+  var DATA_KEY = 'driver-hours-50-v18';
+  var NAME_KEY = 'driver-names-50-v18';
   var ROW_COUNT = 50;
+  var MAX_HISTORY = 730;
+
+  var SMALL_THRESHOLDS = [100, 200, 500, 1000, 2000];
+  var BIG_THRESHOLDS   = [5000, 10000, 20000, 50000, 100000];
+  var ALL_THRESHOLDS   = SMALL_THRESHOLDS.concat(BIG_THRESHOLDS);
+  var DISABLE_RULES = { 200:{mod:1000,from:500}, 20000:{mod:100000,from:50000} };
 
   var tbody = document.getElementById('tbody');
   var thToday = document.getElementById('thToday');
   var statusEl = document.getElementById('status');
   var cloudBadge = document.getElementById('cloudBadge');
+  var dateInput = document.getElementById('dateInput');
+  var dateJalali = document.getElementById('dateJalali');
+  var reportModal = document.getElementById('reportModal');
+  var reportArea = document.getElementById('reportArea');
+  var repFrom = document.getElementById('repFrom');
+  var repTo = document.getElementById('repTo');
   var els = new Map();
+  var cntHeads = document.querySelectorAll('.cnt-head');
 
   var names = [];
   var rows = [];
-  var lastDate = null;
+  var lastSystemDate = null;
+  var currentDate = '';
   var editMode = false;
 
-  /* ---------- utilities ---------- */
   var FA='۰۱۲۳۴۵۶۷۸۹', AR='٠١٢٣٤٥٦٧٨٩';
   function toEnDigits(s){return String(s).replace(/[۰-۹]/g,function(d){return FA.indexOf(d);}).replace(/[٠-٩]/g,function(d){return AR.indexOf(d);});}
   function num(v){if(v==null)return 0;var s=toEnDigits(v).replace(/[^\d.\-]/g,'');var n=parseFloat(s);return isNaN(n)?0:n;}
-  function fmtNum(n){return Math.round(n*100)/100;}
+  function fmtNum(n){var x=Math.round(n*100)/100;return x;}
   function uid(){return 'r'+Math.random().toString(36).slice(2,9);}
   function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
   function fmtMdy(d){return (d.getMonth()+1)+'/'+d.getDate()+'/'+String(d.getFullYear()).slice(-2);}
   function fmtJalali(d){try{return new Intl.DateTimeFormat('fa-IR').format(d);}catch(e){return '';}}
+  function ckey(N){return 'c'+N;}
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  /* تاریخ تبدیل‌ها */
+  function mdyToKey(s){
+    if (!s) return null;
+    var parts = toEnDigits(String(s)).trim().split('/');
+    if (parts.length !== 3) return null;
+    var m = parseInt(parts[0],10), d = parseInt(parts[1],10), y = parseInt(parts[2],10);
+    if (isNaN(m)||isNaN(d)||isNaN(y)) return null;
+    if (y < 100) y += 2000;
+    if (m<1||m>12||d<1||d>31) return null;
+    return y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+  }
+  function keyToMdy(k){var p=k.split('-');return parseInt(p[1],10)+'/'+parseInt(p[2],10)+'/'+p[0].slice(-2);}
+  function keyToJalali(k){
+    var p = k.split('-');
+    var d = new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
+    return fmtJalali(d);
+  }
+  function enumerateDays(fromKey, toKey){
+    var from = new Date(fromKey+'T00:00:00');
+    var to = new Date(toKey+'T00:00:00');
+    var days = [];
+    var cur = new Date(from);
+    var guard = 0;
+    while (cur <= to && guard++ < 400) {
+      var y = cur.getFullYear();
+      var m = String(cur.getMonth()+1).padStart(2,'0');
+      var d = String(cur.getDate()).padStart(2,'0');
+      days.push(y + '-' + m + '-' + d);
+      cur.setDate(cur.getDate() + 1);
+    }
+    return days;
+  }
 
   var statusTimer=null;
   function setStatus(m){statusEl.textContent=m;clearTimeout(statusTimer);statusTimer=setTimeout(function(){statusEl.textContent='';},4500);}
@@ -224,66 +385,90 @@
     cloudBadge.textContent = state==='on'?'همگام':state==='sync'?'در حال همگام‌سازی...':'آفلاین';
   }
 
-  /* ---------- Supabase client ---------- */
   var supabase = null;
   if (typeof window.supabase !== 'undefined' && SUPABASE_URL.indexOf('YOUR_PROJECT') === -1) {
     try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
     catch(e) { console.warn('Supabase init failed:', e); }
   }
 
-  /* ---------- منطق هوشمند شب‌کاری ---------- */
   function calcWorks(r){
-    var y = num(r.yesterday);
+    var base = num(r.reading);
     var t = String(r.today).trim() !== '' ? num(r.today) : null;
     var n = String(r.nightShift).trim() !== '' ? num(r.nightShift) : null;
-
     if (t === null && n === null) return { day: 0, night: 0 };
-    if (t !== null && n === null) return { day: Math.max(0, t - y), night: 0 };
-    if (t === null && n !== null) return { day: 0, night: Math.max(0, n - y) };
-
-    var smaller = Math.min(t, n);
-    var larger  = Math.max(t, n);
-    return {
-      day:   Math.max(0, smaller - y),
-      night: Math.max(0, larger - smaller)
-    };
+    if (t !== null && n === null) return { day: Math.max(0, t - base), night: 0 };
+    if (t === null && n !== null) return { day: 0, night: Math.max(0, n - base) };
+    return { day: Math.max(0, t - base), night: Math.max(0, n - t) };
   }
   function calcDayWork(r){ return calcWorks(r).day; }
   function calcNightWork(r){ return calcWorks(r).night; }
   function calcTotalWork(r){ var w = calcWorks(r); return w.day + w.night; }
-  function displayTotal(r){ return num(r.baseTotal) + calcTotalWork(r); }
+  function cumTotal(r){ return num(r.cumWork) + calcTotalWork(r); }
+  function thresholdsOf(bigScale){ return bigScale ? BIG_THRESHOLDS : SMALL_THRESHOLDS; }
 
-  /* ---------- آستانه‌های هایلایت ---------- */
-  var NORMAL_STEPS = [100, 200, 500, 1000, 2000];
-  var BIG_STEPS    = [5000, 10000, 25000, 50000, 100000];
+  function cntState(r, N){
+    var key = ckey(N);
+    if (!r[key]) r[key] = { base: 0, printed: false };
+    return r[key];
+  }
+  function cntPrimary(r, N){ return Math.max(0, cumTotal(r) - cntState(r, N).base); }
+  function cntSecondary(r, N){ return cntState(r, N).base; }
+  function isCounterDisabled(total, N){
+    var rule = DISABLE_RULES[N];
+    if (!rule) return false;
+    var m = ((total % rule.mod) + rule.mod) % rule.mod;
+    return m >= rule.from;
+  }
+  function cntStatus(r, N){
+    var ct = cumTotal(r);
+    if (isCounterDisabled(ct, N)) return 'disabled';
+    var st = cntState(r, N);
+    var prim = cntPrimary(r, N);
+    if (st.printed && prim >= N) return 'wait';
+    if (prim >= N) return 'ready';
+    return '';
+  }
   function highlightCount(total, bigScale){
-    var steps = bigScale ? BIG_STEPS : NORMAL_STEPS;
+    var steps = thresholdsOf(bigScale);
     var n = 0;
-    for (var i = 0; i < steps.length; i++) {
-      if (total >= steps[i]) n = i + 1; else break;
-    }
+    for (var i = 0; i < steps.length; i++) { if (total >= steps[i]) n = i + 1; else break; }
     return n;
   }
 
-  /* ---------- defaults ---------- */
   function defaultNames(){var a=['مهندس خسروی'];for(var i=2;i<=ROW_COUNT;i++)a.push('راننده '+i);return a;}
+  function emptyCounters(){
+    var o = {};
+    ALL_THRESHOLDS.forEach(function(N){ o[ckey(N)] = { base: 0, printed: false }; });
+    return o;
+  }
+  function makeRow(start, bigScale){
+    var r = {id:uid(), start: num(start), reading: num(start), cumWork: 0,
+             today:'', nightShift:'', bigScale: !!bigScale, alertOk:false, history: []};
+    Object.assign(r, emptyCounters());
+    return r;
+  }
   function defaultRows(){
-    var a=[];
-    a.push({id:uid(), baseTotal:1, yesterday:4129, today:'', nightShift:'', bigScale:false, alertOk:false});
-    for(var i=2;i<=ROW_COUNT;i++) a.push({id:uid(), baseTotal:0, yesterday:0, today:'', nightShift:'', bigScale:false, alertOk:false});
+    var a = [makeRow(4129, false)];
+    for(var i=2;i<=ROW_COUNT;i++) a.push(makeRow(0, false));
     return a;
   }
 
-  /* ---------- storage ---------- */
   function loadNames(){try{var v=JSON.parse(localStorage.getItem(NAME_KEY)||'null');if(Array.isArray(v)&&v.length===ROW_COUNT)return v.slice();}catch(e){}return defaultNames();}
   function saveNames(){try{localStorage.setItem(NAME_KEY,JSON.stringify(names));}catch(e){}}
 
   function buildPayload(){
     return {
-      version: 10, client_id: CLIENT_ID, names: names, lastDate: lastDate,
+      version: 18, client_id: CLIENT_ID,
+      names: names, lastSystemDate: lastSystemDate, currentDate: currentDate,
       rows: rows.map(function(r){
-        return {baseTotal:r.baseTotal, yesterday:r.yesterday, today:r.today,
-                nightShift:r.nightShift, bigScale:!!r.bigScale, alertOk:!!r.alertOk};
+        var o = {start:r.start, reading:r.reading, cumWork:r.cumWork, today:r.today,
+                 nightShift:r.nightShift, bigScale:!!r.bigScale, alertOk:!!r.alertOk,
+                 history: Array.isArray(r.history) ? r.history.slice(-MAX_HISTORY) : []};
+        ALL_THRESHOLDS.forEach(function(N){
+          var st = r[ckey(N)] || {base:0, printed:false};
+          o[ckey(N)] = { base: num(st.base), printed: !!st.printed };
+        });
+        return o;
       })
     };
   }
@@ -292,17 +477,26 @@
   function applyPayload(d, silent){
     if (!d || !Array.isArray(d.rows) || d.rows.length !== ROW_COUNT) return false;
     names = (Array.isArray(d.names) && d.names.length === ROW_COUNT) ? d.names.slice() : defaultNames();
-    lastDate = d.lastDate || todayKey();
+    lastSystemDate = d.lastSystemDate || todayKey();
+    currentDate = d.currentDate || fmtMdy(new Date());
     rows = d.rows.map(function(r){
-      return {
-        id: uid(),
-        baseTotal: num(r.baseTotal),
-        yesterday: num(r.yesterday),
+      var start = r.start != null ? num(r.start) : num(r.yesterday);
+      var reading = r.reading != null ? num(r.reading) : start;
+      var cw = r.cumWork != null ? num(r.cumWork) : num(r.baseTotal);
+      var o = {
+        id: uid(), start: start, reading: reading, cumWork: cw,
         today: (r.today == null ? '' : String(r.today)),
         nightShift: (r.nightShift == null ? '' : String(r.nightShift)),
-        bigScale: !!r.bigScale,
-        alertOk: !!r.alertOk
+        bigScale: !!r.bigScale, alertOk: !!r.alertOk,
+        history: Array.isArray(r.history) ? r.history.map(function(h){
+          return {date: h.date||'', day: num(h.day), night: num(h.night)};
+        }).filter(function(h){return mdyToKey(h.date) !== null;}) : []
       };
+      ALL_THRESHOLDS.forEach(function(N){
+        var st = r[ckey(N)] || {};
+        o[ckey(N)] = { base: num(st.base), printed: !!st.printed };
+      });
+      return o;
     });
     saveNames(); saveLocal();
     if (!silent) renderAll();
@@ -313,10 +507,9 @@
     var d=null;
     try{d=JSON.parse(localStorage.getItem(DATA_KEY)||'null');}catch(e){}
     if (d) applyPayload(d, true);
-    else { lastDate=todayKey(); rows=defaultRows(); saveLocal(); }
+    else { lastSystemDate=todayKey(); currentDate=fmtMdy(new Date()); rows=defaultRows(); saveLocal(); }
   }
 
-  /* ---------- cloud sync ---------- */
   function pushToCloud(){
     if (!supabase) return;
     setCloudBadge('sync');
@@ -328,89 +521,75 @@
     }).catch(function(err){ setCloudBadge('off'); console.warn('push catch:', err); });
   }
   var pushTimer = null;
-  function saveDebounced(){
-    saveLocal();
-    clearTimeout(pushTimer);
-    pushTimer = setTimeout(pushToCloud, 1500);
-  }
+  function saveDebounced(){ saveLocal(); clearTimeout(pushTimer); pushTimer = setTimeout(pushToCloud, 1500); }
 
   function subscribeToCloud(){
     if (!supabase) return;
     supabase.from(TABLE_NAME).select('data').eq('id', ROW_ID).maybeSingle().then(function(res){
-      if (res.error) { setCloudBadge('off'); console.warn('fetch error:', res.error); return; }
+      if (res.error) { setCloudBadge('off'); return; }
       if (res.data && res.data.data) {
         var local = null;
         try { local = JSON.parse(localStorage.getItem(DATA_KEY) || 'null'); } catch(e){}
         var useCloud = !local || !Array.isArray(local.rows) || local.rows.length !== ROW_COUNT;
         if (useCloud) applyPayload(res.data.data, false);
         setCloudBadge('on');
-      } else { pushToCloud(); }
-    }).catch(function(err){ setCloudBadge('off'); console.warn('fetch catch:', err); });
+      } else pushToCloud();
+    }).catch(function(){ setCloudBadge('off'); });
 
     supabase.channel('drivers-sync')
-      .on('postgres_changes',
-          { event: '*', schema: 'public', table: TABLE_NAME },
-          function(payload){
-            var d = payload.new && payload.new.data;
-            if (!d) return;
-            if (d.client_id === CLIENT_ID) { setCloudBadge('on'); return; }
-
-            var focusedEl = document.activeElement;
-            var focusedRowId = null, focusedCol = null;
-            if (focusedEl && focusedEl.tagName === 'INPUT') {
-              els.forEach(function(e, id){
-                if (e.todayInput === focusedEl) { focusedRowId = id; focusedCol = 'today'; }
-                else if (e.nightInput === focusedEl) { focusedRowId = id; focusedCol = 'night'; }
-                else if (e.nameInput === focusedEl) { focusedRowId = id; focusedCol = 'name'; }
-                else if (e.yestInput === focusedEl) { focusedRowId = id; focusedCol = 'yest'; }
-                else if (e.totalInput === focusedEl) { focusedRowId = id; focusedCol = 'total'; }
-              });
-            }
-            applyPayload(d, true);
-            rows.forEach(function(r){ updateRow(r); });
-            if (focusedRowId && focusedCol) {
-              var idx = rows.findIndex(function(r){return r.id===focusedRowId;});
-              focusCell(idx, focusedCol);
-            }
-            setCloudBadge('on');
-            setStatus('به‌روزرسانی از دستگاه دیگر');
-          })
+      .on('postgres_changes', { event: '*', schema: 'public', table: TABLE_NAME }, function(payload){
+        var d = payload.new && payload.new.data;
+        if (!d) return;
+        if (d.client_id === CLIENT_ID) { setCloudBadge('on'); return; }
+        applyPayload(d, true); renderAll();
+        setCloudBadge('on');
+        setStatus('به‌روزرسانی از دستگاه دیگر');
+      })
       .subscribe(function(status){
         if (status === 'SUBSCRIBED') setCloudBadge('on');
         else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setCloudBadge('off');
       });
   }
 
-  /* ---------- شیفت روز ---------- */
-  function shiftRows(){
+  /* ═══════════ شیفت روز — با ذخیره تاریخچه ═══════════ */
+  function shiftRows(keepDate){
+    var dateToSave = currentDate || fmtMdy(new Date());
     rows.forEach(function(r){
       var w = calcWorks(r);
-      r.baseTotal = num(r.baseTotal) + w.day + w.night;
-      var candidates = [num(r.yesterday)];
-      if (String(r.today).trim() !== '') candidates.push(num(r.today));
-      if (String(r.nightShift).trim() !== '') candidates.push(num(r.nightShift));
-      r.yesterday = Math.max.apply(null, candidates);
+      if (w.day > 0 || w.night > 0) {
+        if (!Array.isArray(r.history)) r.history = [];
+        r.history.push({ date: dateToSave, day: w.day, night: w.night });
+        if (r.history.length > MAX_HISTORY) r.history = r.history.slice(-MAX_HISTORY);
+      }
+      r.start = num(r.start) + w.day + w.night;
+      r.cumWork = num(r.cumWork) + w.day + w.night;
+      if (String(r.nightShift).trim() !== '') r.reading = num(r.nightShift);
+      else if (String(r.today).trim() !== '') r.reading = num(r.today);
       r.today = ''; r.nightShift = ''; r.alertOk = false;
     });
-    lastDate = todayKey();
+    lastSystemDate = todayKey();
+    if (!keepDate) currentDate = fmtMdy(new Date());
     saveDebounced();
   }
   function checkDayShift(){
-    var t=todayKey();
-    if(lastDate===t) return false;
-    if(!lastDate){ lastDate=t; saveDebounced(); return false; }
-    shiftRows(); return true;
+    var t = todayKey();
+    if (lastSystemDate === t) return false;
+    if (!lastSystemDate) { lastSystemDate = t; saveDebounced(); return false; }
+    shiftRows(false); return true;
   }
 
-  /* ---------- رنگ هشدار ---------- */
   function levelClass(r){
     if(r.alertOk) return '';
-    var t = displayTotal(r);
+    var t = cumTotal(r);
     if (r.bigScale) {
-      if (t >= 10000) return 'lvl-10000';
-      if (t >= 5000)  return 'lvl-5000';
+      if (t >= 100000) return 'lvl-10000';
+      if (t >= 50000)  return 'lvl-5000';
+      if (t >= 20000)  return 'lvl-2000';
+      if (t >= 10000)  return 'lvl-1000';
+      if (t >= 5000)   return 'lvl-500';
       return '';
     } else {
+      if (t >= 2000) return 'lvl-10000';
       if (t >= 1000) return 'lvl-1000';
       if (t >= 500)  return 'lvl-500';
       if (t >= 200)  return 'lvl-200';
@@ -419,34 +598,51 @@
     }
   }
 
+  function updateCounterHeaders(){
+    if (!rows.length) return;
+    var ths = thresholdsOf(rows[0].bigScale);
+    cntHeads.forEach(function(th, i){ th.textContent = 'کـ' + ths[i]; });
+  }
+
   function updateRow(r){
     var e = els.get(r.id); if(!e) return;
     var dayW   = calcDayWork(r);
     var nightW = calcNightWork(r);
     var totW   = dayW + nightW;
-    var total  = displayTotal(r);
 
     if(!editMode){
-      e.tdTotal.textContent = fmtNum(total);
       var hasToday = String(r.today).trim() !== '';
       var hasNight = String(r.nightShift).trim() !== '';
       e.tdDayDiff.textContent   = (hasToday || hasNight) ? fmtNum(dayW) : '';
-      e.tdNightDiff.textContent = (hasToday && hasNight) ? fmtNum(nightW) : (hasNight && !hasToday ? fmtNum(nightW) : '');
-
-      if(totW===0 && !hasToday && !hasNight){
-        e.tdWorkTotal.textContent = '';
-      } else {
-        var sign = totW>0 ? '+' : '';
-        e.tdWorkTotal.textContent = sign + fmtNum(totW);
-      }
+      e.tdNightDiff.textContent = hasNight ? fmtNum(nightW) : '';
+      if(totW===0 && !hasToday && !hasNight){ e.tdWorkTotal.textContent = ''; }
+      else { e.tdWorkTotal.textContent = (totW>0?'+':'') + fmtNum(totW); }
       e.tdWorkTotal.classList.remove('neg','zero');
       if (totW < 0) e.tdWorkTotal.classList.add('neg');
       else if (totW === 0 && e.tdWorkTotal.textContent !== '') e.tdWorkTotal.classList.add('zero');
-
-      e.tdYest.textContent = fmtNum(r.yesterday);
+      e.accLine.textContent = fmtNum(r.start);
+      e.readLine.textContent = 'قرائت: ' + fmtNum(r.reading);
+    } else {
+      if (e.startInput) e.startInput.value = r.start===0 ? '' : fmtNum(r.start);
+      if (e.readInput) e.readInput.value = r.reading===0 ? '' : fmtNum(r.reading);
     }
 
-    var n = r.alertOk ? 0 : highlightCount(total, r.bigScale);
+    var ths = thresholdsOf(r.bigScale);
+    ths.forEach(function(N, i){
+      var cell = e.cntCells[i]; if (!cell) return;
+      var prim = cntPrimary(r, N);
+      var sec  = cntSecondary(r, N);
+      cell.querySelector('.prim').textContent = fmtNum(prim);
+      cell.querySelector('.base').textContent = fmtNum(sec);
+      cell.querySelector('.unit').textContent = r.bigScale ? 'km' : 'h';
+      var st = cntStatus(r, N);
+      cell.classList.remove('ready','wait','disabled');
+      if (st === 'ready') cell.classList.add('ready');
+      else if (st === 'wait') cell.classList.add('wait');
+      else if (st === 'disabled') cell.classList.add('disabled');
+    });
+
+    var n = r.alertOk ? 0 : highlightCount(cumTotal(r), r.bigScale);
     var trCls = [];
     if (r.bigScale) trCls.push('big-scale');
     var lc = levelClass(r);
@@ -454,9 +650,35 @@
     if (n === 5) trCls.push('hl-5');
     e.tr.className = trCls.join(' ');
 
-    var order = [e.tdName, e.tdTotal, e.tdWorkTotal, e.tdToday, e.tdNight];
+    var order = [e.tdName, e.cntCells[0], e.cntCells[1], e.cntCells[2], e.accLine ? e.accLine.parentElement : null];
     for (var i = 0; i < order.length; i++) {
       if (order[i]) order[i].classList.toggle('hl', i < n);
+    }
+  }
+
+  function handleCounterClick(r, pos){
+    var ths = thresholdsOf(r.bigScale);
+    var N = ths[pos];
+    if (!N) return;
+    var ct = cumTotal(r);
+    if (isCounterDisabled(ct, N)) { setStatus('کنتور ' + N + ' غیرفعال است.'); return; }
+    var prim = cntPrimary(r, N);
+    var st = cntState(r, N);
+    if (prim < N) { setStatus('کنتور ' + N + ' آماده نیست (' + fmtNum(prim) + ').'); return; }
+    if (!st.printed) {
+      st.printed = true; saveDebounced(); updateRow(r);
+      var i = rows.indexOf(r);
+      setStatus('دستور ' + N + ' برای «' + (names[i]||'') + '» چاپ شد.');
+    } else {
+      var resetList = [];
+      for (var k = 0; k <= pos; k++) {
+        var Y = ths[k];
+        if (isCounterDisabled(ct, Y)) continue;
+        var stY = cntState(r, Y);
+        stY.base = ct; stY.printed = false; resetList.push(Y);
+      }
+      saveDebounced(); updateRow(r);
+      setStatus('دستور ' + N + ' ثبت شد. کنتورهای ' + resetList.join('، ') + ' صفر شدند.');
     }
   }
 
@@ -470,19 +692,24 @@
   function focusCell(idx, kind){
     if(idx<0)idx=0; if(idx>=ROW_COUNT)idx=ROW_COUNT-1;
     var e=els.get(rows[idx].id); if(!e)return;
-    var el=kind==='name'?e.nameInput:kind==='total'?e.totalInput:kind==='yest'?e.yestInput:kind==='night'?e.nightInput:e.todayInput;
+    var el;
+    if (kind==='name') el = e.nameInput;
+    else if (kind==='start') el = e.startInput;
+    else if (kind==='read') el = e.readInput;
+    else if (kind==='night') el = e.nightInput;
+    else el = e.todayInput;
     if(el){el.focus();el.select();}
   }
 
-  /* ---------- ساخت سطر ---------- */
   function buildRow(r, idx){
     var tr=document.createElement('tr');
 
     var tdTick=document.createElement('td'); tdTick.className='tick-cell';
     var tick=document.createElement('input'); tick.type='checkbox'; tick.className='tick-box'; tick.checked=!!r.bigScale;
-    tick.title='مقیاس بزرگ';
+    tick.title='مقیاس کیلومتر';
     tick.addEventListener('change',function(){
-      r.bigScale = tick.checked; r.alertOk = false; saveDebounced(); updateRow(r);
+      r.bigScale = tick.checked; r.alertOk = false;
+      saveDebounced(); updateRow(r); updateCounterHeaders();
     });
     tick.addEventListener('dblclick',function(ev){ev.stopPropagation();});
     tdTick.appendChild(tick);
@@ -501,24 +728,61 @@
         else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'name');}
       });
       tdName.appendChild(nameInput);
-    } else { tdName.textContent=names[idx]||''; }
+    } else tdName.textContent=names[idx]||'';
 
-    var tdTotal=document.createElement('td'); tdTotal.className='num total-cell'; var totalInput=null;
-    if(editMode){
-      totalInput=document.createElement('input');
-      totalInput.className='total-input'; totalInput.type='text'; totalInput.inputMode='decimal';
-      totalInput.value = r.baseTotal===0 ? '' : r.baseTotal; totalInput.placeholder='0';
-      totalInput.addEventListener('input',function(){r.baseTotal=num(totalInput.value);saveDebounced();updateRow(r);});
-      totalInput.addEventListener('keydown',function(ev){
-        if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'total');}
-        else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'total');}
-      });
-      tdTotal.appendChild(totalInput);
-    } else { tdTotal.textContent = fmtNum(displayTotal(r)); }
+    var cntCells = [];
+    for (var i = 0; i < 5; i++) {
+      (function(pos){
+        var td = document.createElement('td');
+        td.className = 'cnt-cell';
+        var prim = document.createElement('div'); prim.className = 'prim';
+        var base = document.createElement('div'); base.className = 'base';
+        var unit = document.createElement('div'); unit.className = 'unit';
+        td.appendChild(prim); td.appendChild(base); td.appendChild(unit);
+        td.addEventListener('click', function(ev){ ev.stopPropagation(); handleCounterClick(r, pos); });
+        td.addEventListener('dblclick', function(ev){ ev.stopPropagation(); });
+        cntCells.push(td);
+      })(i);
+    }
 
     var tdDayDiff=document.createElement('td'); tdDayDiff.className='day-diff-cell';
     var tdNightDiff=document.createElement('td'); tdNightDiff.className='night-diff-cell';
     var tdWorkTotal=document.createElement('td'); tdWorkTotal.className='diff-cell';
+
+    var tdStart=document.createElement('td'); tdStart.className='num start-cell';
+    var accLine, readLine, startInput=null, readInput=null;
+    if (editMode) {
+      startInput=document.createElement('input');
+      startInput.type='text'; startInput.inputMode='decimal'; startInput.placeholder='شروع';
+      startInput.value = r.start===0 ? '' : fmtNum(r.start);
+      startInput.title='کنتور کل دستگاه (ادومتر)';
+      startInput.addEventListener('focus',function(){startInput.select();});
+      startInput.addEventListener('input',function(){r.start=num(startInput.value);saveDebounced();updateRow(r);});
+      startInput.addEventListener('dblclick',function(ev){ev.stopPropagation();});
+      startInput.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'start');}
+        else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'start');}
+      });
+      readInput=document.createElement('input');
+      readInput.className='rd-input'; readInput.type='text'; readInput.inputMode='decimal';
+      readInput.placeholder='قرائت قبل';
+      readInput.value = r.reading===0 ? '' : fmtNum(r.reading);
+      readInput.title='آخرین عدد روی کُنتور فیزیکی';
+      readInput.addEventListener('focus',function(){readInput.select();});
+      readInput.addEventListener('input',function(){r.reading=num(readInput.value);saveDebounced();updateRow(r);});
+      readInput.addEventListener('dblclick',function(ev){ev.stopPropagation();});
+      readInput.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx,'today');}
+        else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx,'start');}
+      });
+      tdStart.appendChild(startInput);
+      tdStart.appendChild(readInput);
+    } else {
+      accLine = document.createElement('div'); accLine.className='acc-line';
+      readLine = document.createElement('div'); readLine.className='reading-line';
+      tdStart.appendChild(accLine);
+      tdStart.appendChild(readLine);
+    }
 
     var tdToday=document.createElement('td');
     var todayInput=document.createElement('input');
@@ -529,7 +793,7 @@
     todayInput.addEventListener('dblclick',function(ev){ev.stopPropagation();});
     todayInput.addEventListener('keydown',function(ev){
       if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'today');}
-      else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'today');}
+      else if(ev.key==='ArrowUp'){ev.preventDefault(); if(editMode) focusCell(idx,'read'); }
     });
     tdToday.appendChild(todayInput);
 
@@ -541,48 +805,46 @@
     nightInput.addEventListener('input',function(){r.nightShift=nightInput.value;saveDebounced();updateRow(r);});
     nightInput.addEventListener('dblclick',function(ev){ev.stopPropagation();});
     nightInput.addEventListener('keydown',function(ev){
-      if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'night');}
-      else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'night');}
+      if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'today');}
+      else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx,'today');}
     });
     tdNight.appendChild(nightInput);
 
-    var tdYest=document.createElement('td'); tdYest.className='num yest-cell'; var yestInput=null;
-    if(editMode){
-      yestInput=document.createElement('input');
-      yestInput.className='yest-input'; yestInput.type='text'; yestInput.inputMode='decimal';
-      yestInput.value = r.yesterday===0 ? '' : r.yesterday; yestInput.placeholder='0';
-      yestInput.addEventListener('input',function(){r.yesterday=num(yestInput.value);saveDebounced();updateRow(r);});
-      yestInput.addEventListener('keydown',function(ev){
-        if(ev.key==='Enter'||ev.key==='ArrowDown'){ev.preventDefault();focusCell(idx+1,'yest');}
-        else if(ev.key==='ArrowUp'){ev.preventDefault();focusCell(idx-1,'yest');}
-      });
-      tdYest.appendChild(yestInput);
-    } else { tdYest.textContent = fmtNum(r.yesterday); }
-
-    tr.appendChild(tdTick); tr.appendChild(tdNo); tr.appendChild(tdName); tr.appendChild(tdTotal);
+    tr.appendChild(tdTick); tr.appendChild(tdNo); tr.appendChild(tdName);
+    cntCells.forEach(function(td){ tr.appendChild(td); });
     tr.appendChild(tdDayDiff); tr.appendChild(tdNightDiff); tr.appendChild(tdWorkTotal);
-    tr.appendChild(tdToday); tr.appendChild(tdNight); tr.appendChild(tdYest);
+    tr.appendChild(tdStart); tr.appendChild(tdToday); tr.appendChild(tdNight);
 
     tr.addEventListener('dblclick',function(ev){
       if(ev.target.tagName==='INPUT') return;
+      if(ev.target.closest('.cnt-cell')) return;
       clearAlert(r);
     });
-    tr.title='دابل‌کلیک = پاک کردن هشدار و هایلایت';
 
     els.set(r.id, {
-      tr: tr, tdName: tdName, tdTotal: tdTotal,
+      tr: tr, tdName: tdName, tdStart: tdStart,
+      accLine: accLine, readLine: readLine,
       tdDayDiff: tdDayDiff, tdNightDiff: tdNightDiff, tdWorkTotal: tdWorkTotal,
-      tdYest: tdYest, tdToday: tdToday, tdNight: tdNight,
+      tdToday: tdToday, tdNight: tdNight,
       todayInput: todayInput, nightInput: nightInput,
-      nameInput: nameInput, totalInput: totalInput, yestInput: yestInput
+      startInput: startInput, readInput: readInput,
+      nameInput: nameInput,
+      cntCells: cntCells
     });
     updateRow(r);
     return tr;
   }
 
   function updateHeaderDate(){
-    var d=new Date();
-    thToday.innerHTML='<div class="th-date">'+fmtMdy(d)+'</div><div class="th-sub">'+fmtJalali(d)+'</div>';
+    var d = new Date();
+    var shown = currentDate || fmtMdy(d);
+    dateInput.value = shown;
+    try {
+      var k = mdyToKey(shown);
+      if (k) dateJalali.textContent = keyToJalali(k);
+      else dateJalali.textContent = '';
+    } catch(e) { dateJalali.textContent = ''; }
+    thToday.innerHTML = '<div class="th-date">'+shown+'</div><div class="th-sub">'+fmtJalali(d)+'</div>';
   }
 
   function renderAll(){
@@ -593,44 +855,71 @@
         if(e.todayInput===document.activeElement){focusIdx=i;focusKind='today';}
         else if(e.nightInput===document.activeElement){focusIdx=i;focusKind='night';}
         else if(e.nameInput===document.activeElement){focusIdx=i;focusKind='name';}
-        else if(e.yestInput===document.activeElement){focusIdx=i;focusKind='yest';}
-        else if(e.totalInput===document.activeElement){focusIdx=i;focusKind='total';}
+        else if(e.startInput===document.activeElement){focusIdx=i;focusKind='start';}
+        else if(e.readInput===document.activeElement){focusIdx=i;focusKind='read';}
       });
     }
     tbody.innerHTML=''; els.clear();
     rows.forEach(function(r,i){tbody.appendChild(buildRow(r,i));});
-    updateHeaderDate();
+    updateHeaderDate(); updateCounterHeaders();
     if(focusIdx>=0) focusCell(focusIdx,focusKind||'today');
   }
 
-  /* ---------- دکمه‌ها ---------- */
+  dateInput.addEventListener('input', function(){
+    currentDate = dateInput.value.trim();
+    saveDebounced();
+    var k = mdyToKey(currentDate);
+    if (k) {
+      dateJalali.textContent = keyToJalali(k);
+      thToday.innerHTML = '<div class="th-date">'+currentDate+'</div><div class="th-sub">'+keyToJalali(k)+'</div>';
+    }
+  });
+  document.getElementById('setTodayBtn').addEventListener('click', function(){
+    var d = new Date();
+    currentDate = fmtMdy(d); dateInput.value = currentDate;
+    dateJalali.textContent = fmtJalali(d);
+    thToday.innerHTML = '<div class="th-date">'+currentDate+'</div><div class="th-sub">'+fmtJalali(d)+'</div>';
+    saveDebounced(); setStatus('تاریخ به امروز برگشت.');
+  });
+
   var editBtn=document.getElementById('editBtn');
   editBtn.addEventListener('click',function(){
     editMode=!editMode;
     editBtn.classList.toggle('active',editMode);
     editBtn.textContent = editMode ? '✔ پایان ویرایش' : '✎ ویرایش اولیه';
     renderAll();
-    if(editMode){ setStatus('ویرایش فعال. Enter = سطر بعد.'); focusCell(0,'name'); }
+    if(editMode){ setStatus('ویرایش فعال.'); focusCell(0,'name'); }
     else { saveNames(); saveDebounced(); setStatus('ذخیره شد.'); }
   });
 
   document.getElementById('shiftBtn').addEventListener('click',function(){
-    if(!confirm('شیفت روز انجام شود؟\nکارکرد روز و شب به مجموع اضافه می‌شود و امروز/شب خالی می‌گردد.')) return;
-    shiftRows(); renderAll(); setStatus('شیفت روز انجام شد.');
+    if(!confirm('شیفت روز انجام شود؟\nکارکرد امروز در تاریخچه ذخیره و به شروع اضافه می‌شود.')) return;
+    shiftRows(true); renderAll(); setStatus('شیفت روز انجام شد و در تاریخچه ذخیره شد.');
+  });
+
+  document.getElementById('resetCntBtn').addEventListener('click',function(){
+    if(!confirm('همه کنتورها صفر شوند؟ (شروع، کارکرد و تاریخچه دست‌نخورده)')) return;
+    rows.forEach(function(r){
+      ALL_THRESHOLDS.forEach(function(N){ r[ckey(N)] = { base: 0, printed: false }; });
+    });
+    saveDebounced(); renderAll(); setStatus('کنتورها بازنشانی شد.');
   });
 
   document.getElementById('resetBtn').addEventListener('click',function(){
-    if(!confirm('همه ساعات پاک شود؟ (نام‌ها دست‌نخورده)')) return;
-    rows.forEach(function(r){ r.baseTotal=0; r.today=''; r.nightShift=''; r.yesterday=0; r.alertOk=false; });
-    lastDate=todayKey(); saveDebounced(); renderAll(); setStatus('بازنشانی شد.');
+    if(!confirm('همه ساعات، کنتورها و تاریخچه پاک شود؟')) return;
+    rows.forEach(function(r){
+      r.start=0; r.reading=0; r.cumWork=0; r.today=''; r.nightShift=''; r.alertOk=false; r.history=[];
+      ALL_THRESHOLDS.forEach(function(N){ r[ckey(N)] = { base: 0, printed: false }; });
+    });
+    lastSystemDate=todayKey(); currentDate=fmtMdy(new Date());
+    saveDebounced(); renderAll(); setStatus('بازنشانی کل انجام شد.');
   });
 
   document.getElementById('exportBtn').addEventListener('click',function(){
     var blob=new Blob([JSON.stringify(buildPayload(),null,2)],{type:'application/json'});
     var a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download='drivers-backup-'+todayKey()+'.json';
-    a.click();
+    a.download='drivers-backup-'+todayKey()+'.json'; a.click();
     setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
     setStatus('فایل پشتیبان ساخته شد.');
   });
@@ -644,15 +933,147 @@
       try{
         var d=JSON.parse(rd.result);
         if(!applyPayload(d, false)) throw new Error('تعداد سطرها مطابق نیست');
-        pushToCloud();
-        setStatus('داده‌ها بازیابی و به ابر ارسال شد.');
+        pushToCloud(); setStatus('داده‌ها بازیابی شد.');
       }catch(err){ alert('فایل نامعتبر: '+err.message); }
       fileInput.value='';
     };
     rd.readAsText(f);
   });
 
-  /* ---------- راه‌اندازی ---------- */
+  /* ═══════════ گزارش دوره‌ای ═══════════ */
+  function openReport(){
+    var d = new Date();
+    var y = d.getFullYear(), m = d.getMonth();
+    /* پیش‌فرض: از اول ماه جاری تا امروز */
+    repFrom.value = (m+1) + '/1/' + String(y).slice(-2);
+    repTo.value = fmtMdy(d);
+    generateReport();
+    reportModal.classList.add('open');
+  }
+  function closeReport(){ reportModal.classList.remove('open'); }
+
+  document.getElementById('reportBtn').addEventListener('click', openReport);
+  document.getElementById('closeReport').addEventListener('click', closeReport);
+  reportModal.addEventListener('click', function(ev){ if (ev.target === reportModal) closeReport(); });
+
+  document.getElementById('repShow').addEventListener('click', generateReport);
+  document.getElementById('repPrint').addEventListener('click', function(){ window.print(); });
+
+  document.getElementById('repThisMonth').addEventListener('click', function(){
+    var d = new Date();
+    repFrom.value = (d.getMonth()+1) + '/1/' + String(d.getFullYear()).slice(-2);
+    repTo.value = fmtMdy(d);
+    generateReport();
+  });
+  document.getElementById('repLast7').addEventListener('click', function(){
+    var d = new Date();
+    var from = new Date(d); from.setDate(from.getDate() - 6);
+    repFrom.value = fmtMdy(from);
+    repTo.value = fmtMdy(d);
+    generateReport();
+  });
+  document.getElementById('repToday').addEventListener('click', function(){
+    var d = new Date();
+    repFrom.value = fmtMdy(d);
+    repTo.value = fmtMdy(d);
+    generateReport();
+  });
+
+  function generateReport(){
+    var fromKey = mdyToKey(repFrom.value);
+    var toKey = mdyToKey(repTo.value);
+    if (!fromKey || !toKey) {
+      alert('لطفاً تاریخ‌ها را به صورت M/D/YY وارد کنید (مثال: 9/1/26)');
+      return;
+    }
+    if (fromKey > toKey) { var t = fromKey; fromKey = toKey; toKey = t; }
+    var days = enumerateDays(fromKey, toKey);
+    if (days.length === 0) { alert('دوره نامعتبر'); return; }
+    if (days.length > 180) { alert('دوره بیش از حد طولانی است (حداکثر ۱۸۰ روز)'); return; }
+
+    /* جمع‌آوری داده هر سطر */
+    var activeRows = [];
+    rows.forEach(function(r, idx) {
+      var byDate = {};
+      (r.history || []).forEach(function(h) {
+        var k = mdyToKey(h.date);
+        if (!k || k < fromKey || k > toKey) return;
+        if (!byDate[k]) byDate[k] = { day: 0, night: 0 };
+        byDate[k].day += num(h.day);
+        byDate[k].night += num(h.night);
+      });
+      /* کارکرد امروز اگر در دوره باشد */
+      var curKey = mdyToKey(currentDate);
+      if (curKey && curKey >= fromKey && curKey <= toKey) {
+        var w = calcWorks(r);
+        if (w.day > 0 || w.night > 0) {
+          if (!byDate[curKey]) byDate[curKey] = { day: 0, night: 0 };
+          byDate[curKey].day += w.day;
+          byDate[curKey].night += w.night;
+        }
+      }
+      if (Object.keys(byDate).length === 0) return;
+      activeRows.push({ name: names[idx] || ('راننده ' + (idx+1)), bigScale: r.bigScale, byDate: byDate });
+    });
+
+    /* ساخت HTML */
+    var now = new Date();
+    var html = '';
+    html += '<div class="rep-header">';
+    html += '<h1>گزارش کارکرد رانندگان / ماشین‌آلات</h1>';
+    html += '<div class="rep-meta">';
+    html += '<div><strong>تاریخ اخذ گزارش:</strong> ' + fmtJalali(now) + ' &nbsp;(' + fmtMdy(now) + ')</div>';
+    html += '<div><strong>دوره خلاصه‌گیری:</strong> ' + keyToJalali(fromKey) + ' تا ' + keyToJalali(toKey) + ' &nbsp;(' + keyToMdy(fromKey) + ' تا ' + keyToMdy(toKey) + ')</div>';
+    html += '<div><strong>تعداد روزها:</strong> ' + days.length.toLocaleString('fa-IR') + ' روز</div>';
+    html += '</div></div>';
+
+    if (activeRows.length === 0) {
+      html += '<p class="rep-empty">در این دوره هیچ کارکردی ثبت نشده است.</p>';
+    } else {
+      html += '<table class="rep-table"><thead><tr>';
+      html += '<th class="rep-name">نام دستگاه / راننده</th>';
+      days.forEach(function(k) {
+        html += '<th title="' + keyToJalali(k) + '">' + keyToMdy(k) + '</th>';
+      });
+      html += '<th class="rep-total">جمع کارکرد</th>';
+      html += '</tr></thead><tbody>';
+
+      var grandTotal = 0;
+      activeRows.forEach(function(r) {
+        html += '<tr>';
+        html += '<td class="rep-name">' + escapeHtml(r.name) + '</td>';
+        var rowTotal = 0;
+        days.forEach(function(k) {
+          var e = r.byDate[k];
+          var v = e ? (e.day + e.night) : 0;
+          rowTotal += v;
+          html += '<td>' + (v > 0 ? fmtNum(v) : '-') + '</td>';
+        });
+        grandTotal += rowTotal;
+        html += '<td class="rep-total">' + fmtNum(rowTotal) + '</td>';
+        html += '</tr>';
+      });
+
+      /* جمع ستونی */
+      html += '<tr class="rep-bottom"><td class="rep-name">جمع روز</td>';
+      var grandCheck = 0;
+      days.forEach(function(k) {
+        var daySum = 0;
+        activeRows.forEach(function(r) {
+          var e = r.byDate[k];
+          if (e) daySum += e.day + e.night;
+        });
+        grandCheck += daySum;
+        html += '<td>' + (daySum > 0 ? fmtNum(daySum) : '-') + '</td>';
+      });
+      html += '<td class="rep-total">' + fmtNum(grandCheck) + '</td>';
+      html += '</tr></tbody></table>';
+    }
+
+    reportArea.innerHTML = html;
+  }
+
+  /* ═══════════ راه‌اندازی ═══════════ */
   names = loadNames();
   load();
   var shifted = checkDayShift();
